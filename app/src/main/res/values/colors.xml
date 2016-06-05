@@ -5,4 +5,14 @@
     <color name="colorAccent">#FF4081</color>
     <color name="backgraoudcolor">#434343</color>
     <color name="textColor">#ffffff</color>
+	
+	<color name="likeBlack">#2b2a29</color>
+    <color name="darkGrey">#a5a8a0</color>
+    <color name="deepdarkGrey">#5a5a5a</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="tableLine">#dddddd</color>
+    <color name="menuLine">#20000000</color>
+    <color name="mainBackground">#dddddd</color>
+    <color name="theme">#9ACD32</color>
 </resources>

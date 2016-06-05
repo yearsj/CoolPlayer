@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:minHeight="30pt"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/playListLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        >
+        <include layout="@layout/fragment_play_list"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:layout_alignParentTop="true"
+        android:background="@color/menuLine" >
+    </View>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30pt"
+        >
+    <ImageView
+        android:id="@+id/poster"
+        style="@style/picStyle"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="2pt"
+        android:src="@drawable/poster" />
+
+    <LinearLayout
+        android:id="@+id/text"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/poster" >
+
+        <TextView
+            android:id="@+id/musicName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/musicName"
+            android:textColor="@color/likeBlack"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/musicInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/musicInfo"
+            android:textColor="@color/deepdarkGrey"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/playList"
+        style="@style/picButtonStyle"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/lines" />
+
+        <ImageView
+            android:id="@+id/playMusic"
+            style="@style/picButtonStyle"
+            android:layout_height="15pt"
+            android:layout_width="15pt"
+            android:layout_alignRight="@id/playList"
+            android:layout_marginRight="20pt"
+            android:src="@drawable/play_music" />
+    </RelativeLayout>
+</LinearLayout>

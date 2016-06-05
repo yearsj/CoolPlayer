@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/deepdarkGrey"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+<LinearLayout
+    android:id="@+id/fragment_play_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            style="@style/picButtonStyle"
+            android:src="@drawable/list_loop"
+            android:layout_marginTop="5pt"
+            android:layout_marginBottom="5pt"
+            android:layout_marginLeft="10pt"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/playOne"
+            android:textSize="10pt"
+            android:layout_gravity="center"
+            android:layout_marginLeft="7pt"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1sp"
+        android:background="@color/white"
+        />
+
+    <ListView
+        android:id="@+id/playLists"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/deepdarkGrey"
+        >
+
+    </ListView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        />
+
+</LinearLayout>
+</ScrollView>

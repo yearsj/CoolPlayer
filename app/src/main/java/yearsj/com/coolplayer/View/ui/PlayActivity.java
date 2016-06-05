@@ -1,4 +1,4 @@
-package yearsj.com.coolplayer.View;
+package yearsj.com.coolplayer.View.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 import yearsj.com.coolplayer.R;
+import yearsj.com.coolplayer.View.MyFragmentAdapter;
 import yearsj.com.coolplayer.View.fragment.AlbumFragment;
 import yearsj.com.coolplayer.View.fragment.PlayListFragment;
 

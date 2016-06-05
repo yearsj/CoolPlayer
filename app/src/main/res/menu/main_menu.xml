@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/findByTime"
+        android:title="@string/findByTime"/>
+    <item
+        android:id="@+id/findByName"
+        android:title="@string/findByName"/>
+    <item
+        android:id="@+id/findLocalMusic"
+        android:title="@string/findLocalMusic"/>
+</menu>

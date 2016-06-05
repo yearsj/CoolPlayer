@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">CoolPlayer</string>
+	
+    <string name="mainTitle">我的音乐</string>
+    <string name="musicName">好久不见</string>
+    <string name="musicInfo">陈奕迅|认了吧</string>
+    <string name="playOne">单曲循环</string>
+    
+    
+    
+    <string name="songs">歌曲/3</string>
+    <string name="singer">歌手/10</string>
+    <string name="album">专辑/5</string>
+    <string name="search_hint">请输入关键字</string>
+    <string name="findByName">按名称排序</string>
+    <string name="findByTime">按时间排序</string>
+    <string name="findLocalMusic">一键扫描本地音乐</string>
+    <string name="findMusic">扫描歌曲</string>
+    <string name="findMusicButton">一键扫描</string>
 </resources>

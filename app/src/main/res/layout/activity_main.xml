@@ -1,16 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="yearsj.com.coolplayer.MainActivity">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+     <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="30pt"
+        android:background="@color/theme" >
+
+        <TextView
+            android:id="@+id/mainTitile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@string/mainTitle"
+            android:textColor="@color/white"
+            android:textSize="12pt"
+            android:textStyle="bold" />
+
+        <ImageView
+            style="@style/picButtonStyle"
+            android:id="@+id/menu"
+            android:onClick="popupmenu"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/menu" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1sp"
+        android:id="@+id/divide"
+        android:layout_below="@id/title"
+        android:background="@color/menuLine" >
+    </View>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_below="@id/divide"
+        android:background="@color/mainBackground"
+        android:layout_width="fill_parent"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content" >
+
+        <android.support.v4.view.PagerTabStrip
+            android:id="@+id/tabstrip"
+            android:layout_width="wrap_content"
+            android:layout_height="50dip"
+            style="@style/textStyle"
+            android:gravity="center" />
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <fragment
+            android:id="@+id/id_fragment_playing"
+            android:name="yearsj.com.coolplayer.View.fragment.PlayingFragment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+</FrameLayout>
