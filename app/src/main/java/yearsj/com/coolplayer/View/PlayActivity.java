@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 import yearsj.com.coolplayer.R;
@@ -15,12 +17,13 @@ import yearsj.com.coolplayer.View.fragment.PlayListFragment;
 /**
  * Created by yearsj on 2016/6/4.
  */
-public class PlayActivity extends FragmentActivity {
+public class PlayActivity extends FragmentActivity implements View.OnClickListener{
 
     private ViewPager mViewPager;
     private List<Fragment> fragments;
     private View dot1;
     private View dot2;
+    private ImageView list_play;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +35,24 @@ public class PlayActivity extends FragmentActivity {
     private void init(){
         mViewPager = (ViewPager)findViewById(R.id.viewpager_play);
         fragments = new ArrayList<Fragment>();
-        fragments.add(new AlbumFragment());
+        fragments.add(new PlayListFragment());
         fragments.add(new AlbumFragment());
         mViewPager.setAdapter(new MyFragmentAdapter(this.getSupportFragmentManager(), fragments));
         mViewPager.setCurrentItem(1);
         mViewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         dot1 = (View)findViewById(R.id.dot_1);
         dot2 = (View)findViewById(R.id.dot_2);
+        list_play = (ImageView)findViewById(R.id.list_play);
+        list_play.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.list_play:
+                mViewPager.setCurrentItem(0);
+                break;
+        }
     }
 
     /**
