@@ -2,18 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
 <RelativeLayout
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
      <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="30pt"
-        android:background="@color/theme" >
+        android:background="@color/theme">
 
         <TextView
             android:id="@+id/mainTitile"
@@ -23,7 +25,7 @@
             android:layout_centerInParent="true"
             android:text="@string/mainTitle"
             android:textColor="@color/white"
-            android:textSize="12pt"
+            android:textSize="11pt"
             android:textStyle="bold" />
 
         <ImageView
@@ -43,20 +45,24 @@
     </View>
 
 
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_below="@id/divide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabIndicatorColor="@color/theme"
+        app:tabSelectedTextColor="@color/theme"
+        app:tabTextColor="@color/black"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        android:layout_below="@id/divide"
+        android:layout_below="@id/tabs"
         android:background="@color/mainBackground"
         android:layout_width="fill_parent"
         android:layout_gravity="center"
-        android:layout_height="wrap_content" >
-
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/tabstrip"
-            android:layout_width="wrap_content"
-            android:layout_height="50dip"
-            style="@style/textStyle"
-            android:gravity="center" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30pt">
     </android.support.v4.view.ViewPager>
 </RelativeLayout>
 

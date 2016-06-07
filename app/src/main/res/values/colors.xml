@@ -13,6 +13,8 @@
     <color name="black">#000000</color>
     <color name="tableLine">#dddddd</color>
     <color name="menuLine">#20000000</color>
-    <color name="mainBackground">#dddddd</color>
+    <color name="mainBackground">#EBEBEB</color>
     <color name="theme">#9ACD32</color>
+    <color name="trans">#aa434343</color>
+
 </resources>

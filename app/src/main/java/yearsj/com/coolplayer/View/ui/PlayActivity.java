@@ -1,5 +1,6 @@
 package yearsj.com.coolplayer.View.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -97,5 +98,10 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                 break;
             default: break;
         }
+    }
+
+    public void hidePlayInfo(View v){
+        finish();
+        overridePendingTransition( R.animator.popup_window_enter,R.anim.slide_up_to_bottom);
     }
 }

@@ -5,8 +5,9 @@
     <string name="musicName">好久不见</string>
     <string name="musicInfo">陈奕迅|认了吧</string>
     <string name="playOne">单曲循环</string>
-    
-    
+
+    <drawable name="clr_normal">@color/white</drawable>
+    <drawable name="clr_pressed">@color/theme</drawable>
     
     <string name="songs">歌曲/3</string>
     <string name="singer">歌手/10</string>

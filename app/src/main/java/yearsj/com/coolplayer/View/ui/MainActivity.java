@@ -3,8 +3,10 @@ package yearsj.com.coolplayer.View.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -19,11 +21,14 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import yearsj.com.coolplayer.View.fragment.AlbumListFragment;
+import yearsj.com.coolplayer.View.fragment.PlayingFragment;
 import yearsj.com.coolplayer.View.fragment.SingerListFragment;
 import yearsj.com.coolplayer.View.fragment.SongsListFragment;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity{
 	/**弹出菜单*/
 	private PopupMenu popupMenu;
 	/**菜单*/
@@ -36,9 +41,8 @@ public class MainActivity extends FragmentActivity {
 	ArrayList<Fragment> fragmentsContainter;
 	//标题列表
 	ArrayList<String>   titleContainer    = new ArrayList<String>();
-	//通过pagerTabStrip可以设置标题的属性
-	private PagerTabStrip tabStrip;
 
+	private TabLayout mTabLayout;
 
 
 	@Override
@@ -109,50 +113,58 @@ public class MainActivity extends FragmentActivity {
 		fragmentsContainter.add(singerListFragment);
 		fragmentsContainter.add(albumListFragment);
 
-		tabStrip = (PagerTabStrip) this.findViewById(R.id.tabstrip);
-		//取消tab下面的长横线
-		tabStrip.setDrawFullUnderline(false);
-		//设置tab的背景色
-		tabStrip.setBackgroundColor(this.getResources().getColor(R.color.white));
-		//tabStrip.setTextColor(this.getResources().getColor(R.color.theme));
-		//设置当前tab页签的下划线颜色
-		tabStrip.setTabIndicatorColor(this.getResources().getColor(R.color.theme));
-
-
+		mTabLayout = (TabLayout) findViewById(R.id.tabs);
 
 		//添加标签
 		titleContainer.add(this.getResources().getString(R.string.songs));
 		titleContainer.add(this.getResources().getString(R.string.singer));
 		titleContainer.add(this.getResources().getString(R.string.album));
 
+		mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
+		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(0)));//添加tab选项卡
+		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(1)));
+		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(2)));
+
+		MyViewPager myViewPager=new MyViewPager(getSupportFragmentManager(),fragmentsContainter,titleContainer);
+		pager.setAdapter(myViewPager);
+		mTabLayout.setupWithViewPager(pager);//将TabLayout和ViewPager关联起来
+		mTabLayout.setTabsFromPagerAdapter(myViewPager);
+	}
 
 
-		pager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+	public void showPlayInfo(View v){
+		Intent intent = new Intent();
+		intent.setClass(MainActivity.this, PlayActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
+	}
 
-			//viewpager中的组件数量
-			@Override
-			public int getCount() {
-				return fragmentsContainter.size();
-			}
+	class MyViewPager extends FragmentPagerAdapter{
+		private List<Fragment> mViewList;
+		private List<String>  titleContainer;
 
-			@Override
-			public CharSequence getPageTitle(int position) {
-				// TODO Auto-generated method stub
-				SpannableStringBuilder ssb = new SpannableStringBuilder(" "
-						+ titleContainer.get(position)); // space added before text for
-//				ForegroundColorSpan fcs = new ForegroundColorSpan(getResources().getColor(R.color.theme));//字体颜色设置
-//				ssb.setSpan(fcs, 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);//设置字体颜色
-				ssb.setSpan(new RelativeSizeSpan(1.2f), 1, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				return ssb;
-			}
+		public MyViewPager(FragmentManager fm,List<Fragment> mViewList,List<String>  titleContainer){
+			super(fm);
+			this.mViewList=mViewList;
+			this.titleContainer=titleContainer;
+		}
 
-			@Override
-			public Fragment getItem(int position) {
-				return fragmentsContainter.get(position);
-			}
+		//viewpager中的组件数量
+		@Override
+		public int getCount() {
+			return mViewList.size();
+		}
 
-		});
+		@Override
+		public CharSequence getPageTitle(int position) {
+			// TODO Auto-generated method stub
+		return titleContainer.get(position);
+		}
 
-		pager.setCurrentItem(0);
+		@Override
+		public Fragment getItem(int position) {
+			return mViewList.get(position);
+		}
+
 	}
 }

@@ -44,7 +44,7 @@ public class ChangeTextColorAdapter extends SimpleAdapter {
         if(position==0) {
             titleView.setTextColor(Color.GREEN);
             infoView.setTextColor(Color.GREEN);
-            image.setImageResource(R.drawable.live);
+            image.setImageResource(R.drawable.playing);
         }else{
             titleView.setTextColor(Color.WHITE);
             infoView.setTextColor(Color.WHITE);
