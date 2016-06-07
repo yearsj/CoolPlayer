@@ -10,7 +10,6 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +19,6 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import java.util.ArrayList;
-
-import yearsj.com.coolplayer.R;
 import yearsj.com.coolplayer.View.fragment.AlbumListFragment;
 import yearsj.com.coolplayer.View.fragment.SingerListFragment;
 import yearsj.com.coolplayer.View.fragment.SongsListFragment;

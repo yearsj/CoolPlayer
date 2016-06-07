@@ -10,7 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import yearsj.com.coolplayer.R;
+import yearsj.com.coolplayer.View.ui.R;
 
 import static android.graphics.Color.*;
 

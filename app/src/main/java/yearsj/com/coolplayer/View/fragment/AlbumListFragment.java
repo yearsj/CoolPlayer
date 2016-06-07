@@ -16,7 +16,7 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import yearsj.com.coolplayer.R;
+import yearsj.com.coolplayer.View.ui.R;
 
 public class AlbumListFragment extends Fragment {
     private Drawable poster;

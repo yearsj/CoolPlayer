@@ -13,7 +13,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 
-import yearsj.com.coolplayer.R;
+import yearsj.com.coolplayer.View.ui.R;
 
 
 public class SearchInfoTextView  extends EditText implements

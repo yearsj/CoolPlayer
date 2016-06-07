@@ -13,17 +13,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import android.view.Window;
-import android.view.WindowManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import yearsj.com.coolplayer.R;
 import yearsj.com.coolplayer.View.adapter.SortAdapter;
 import yearsj.com.coolplayer.View.model.SortModel;
+import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
 import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.PinyinComparator;

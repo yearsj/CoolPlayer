@@ -1,4 +1,4 @@
-package yearsj.com.coolplayer.View;
+package yearsj.com.coolplayer.View.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

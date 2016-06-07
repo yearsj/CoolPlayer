@@ -17,9 +17,8 @@ import android.widget.SimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import yearsj.com.coolplayer.R;
 import yearsj.com.coolplayer.View.adapter.ChangeTextColorAdapter;
+import yearsj.com.coolplayer.View.ui.R;
 
 @SuppressLint("NewApi")
 public class PlayingFragment extends Fragment{

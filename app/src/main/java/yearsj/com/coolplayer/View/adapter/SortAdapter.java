@@ -7,13 +7,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-
-import yearsj.com.coolplayer.R;
 import yearsj.com.coolplayer.View.model.SortModel;
+import yearsj.com.coolplayer.View.ui.R;
 
 
 public class SortAdapter extends SimpleAdapter implements SectionIndexer {

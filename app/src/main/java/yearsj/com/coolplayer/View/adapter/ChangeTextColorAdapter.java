@@ -2,7 +2,6 @@ package yearsj.com.coolplayer.View.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 
-import yearsj.com.coolplayer.R;
+import yearsj.com.coolplayer.View.ui.R;
 
 /**
  * Created by bing on 2016/6/3.

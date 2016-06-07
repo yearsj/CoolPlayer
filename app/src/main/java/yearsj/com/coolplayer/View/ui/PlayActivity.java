@@ -10,8 +10,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import yearsj.com.coolplayer.R;
-import yearsj.com.coolplayer.View.MyFragmentAdapter;
+import yearsj.com.coolplayer.View.adapter.MyFragmentAdapter;
 import yearsj.com.coolplayer.View.fragment.AlbumFragment;
 import yearsj.com.coolplayer.View.fragment.PlayListFragment;
 

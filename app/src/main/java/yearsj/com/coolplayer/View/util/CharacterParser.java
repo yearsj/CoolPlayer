@@ -1,9 +1,3 @@
-/*
- * Filename	CharacterParser.java
- * Company	�Ϻ�����-�ֶ��ֹ�˾��
- * @author	LuRuihui
- * @version	0.1
- */
 package yearsj.com.coolplayer.View.util;
 
 public class CharacterParser {
