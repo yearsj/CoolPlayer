@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-   >
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:src="@drawable/test"
-       android:scaleType="centerCrop"
-        android:foreground="@color/trans"
-        />
+        android:scaleType="centerCrop"
+        android:foreground="@color/trans" />
 
     <RelativeLayout
         android:orientation="vertical"
@@ -21,20 +18,19 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
-<ImageView
-        style="@style/picButtonStyle"
-        android:src="@drawable/down"
-        android:onClick="hidePlayInfo"
-        android:layout_alignParentTop="true"
-        android:id="@+id/back"/>
+        <ImageView
+            style="@style/picButtonStyle"
+            android:src="@drawable/down"
+            android:onClick="hidePlayInfo"
+            android:layout_alignParentTop="true"
+            android:id="@+id/back"/>
 
         <ImageView
            style="@style/picButtonStyle"
             android:src ="@drawable/more"
             android:id="@+id/list_play"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            />
+            android:layout_alignParentTop="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,77 +53,103 @@
         android:layout_below="@id/title_play"
         android:layout_centerHorizontal="true"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10mm"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8mm"
-        android:layout_marginRight="8mm"
-        android:id="@+id/linear_middle"
-        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10mm"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8mm"
+            android:layout_marginRight="8mm"
+            android:id="@+id/linear_middle"
+            android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:layout_height="13pt"
-            android:layout_width="13pt"
-            android:id="@+id/pre_play"
-            android:src="@drawable/pre_play"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:layout_gravity="center_vertical"/>
+            <ImageView
+                android:layout_height="13pt"
+                android:layout_width="13pt"
+                android:id="@+id/pre_play"
+                android:src="@drawable/pre_play"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:layout_gravity="center_vertical"/>
 
-        <ImageView
-            android:clickable="true"
-            style="@style/picStyle"
-            android:id="@+id/play"
-            android:src="@drawable/play"
-            android:layout_marginLeft="10pt"
-            android:layout_weight="1"/>
-        <ImageView
-            android:clickable="true"
-            style="@style/picButtonStyle"
-            android:id="@+id/next_play"
-            android:src="@drawable/next"
-            android:layout_marginLeft="10pt"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-    </LinearLayout>
+            <ImageView
+                android:clickable="true"
+                style="@style/picStyle"
+                android:id="@+id/play"
+                android:src="@drawable/play"
+                android:layout_marginLeft="10pt"
+                android:layout_weight="1"/>
+            <ImageView
+                android:clickable="true"
+                style="@style/picButtonStyle"
+                android:id="@+id/next_play"
+                android:src="@drawable/next"
+                android:layout_marginLeft="10pt"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/process"
-        android:layout_marginBottom="20dp"
-        android:layout_above="@id/linear_middle"
-        android:layout_centerHorizontal="true"
-        android:progressDrawable="@drawable/progress_holo_light"
-        android:thumb="@drawable/detail_icon_schedule_ball"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_above="@id/linear_middle"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/processLin"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/startText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="@color/textColor"
+                android:layout_weight="1"
+                android:maxLines="1"/>
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:id="@+id/process"
+                android:layout_marginBottom="20dp"
+                android:layout_centerHorizontal="true"
+                android:progressDrawable="@drawable/progress_holo_light"
+                android:thumb="@drawable/detail_icon_schedule_ball"
+                android:layout_weight="100"/>
+            <TextView
+                android:id="@+id/endText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="03:50"
+                android:textColor="@color/textColor"
+                android:layout_weight="1"
+                android:maxLines="1"/>
+        </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/process"
+        android:layout_above="@id/processLin"
         android:id="@+id/linear_dot"
         android:layout_centerHorizontal="true">
         <View
             android:id="@+id/dot_1"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="8px"
+            android:layout_height="8px"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:background="@drawable/dot_normal" />
         <View
             android:id="@+id/dot_2"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="6px"
+            android:layout_height="6px"
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:background="@drawable/dot_normal" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="5dp"

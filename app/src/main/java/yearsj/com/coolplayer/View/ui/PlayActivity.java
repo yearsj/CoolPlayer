@@ -1,5 +1,6 @@
 package yearsj.com.coolplayer.View.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,10 +37,10 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     private void init(){
         mViewPager = (ViewPager)findViewById(R.id.viewpager_play);
         fragments = new ArrayList<Fragment>();
-        fragments.add(new PlayListFragment());
         fragments.add(new AlbumFragment());
+        fragments.add(new PlayListFragment());
         mViewPager.setAdapter(new MyFragmentAdapter(this.getSupportFragmentManager(), fragments));
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
         mViewPager.addOnPageChangeListener(new MyOnPageChangeListener());
         dot1 = (View)findViewById(R.id.dot_1);
         dot2 = (View)findViewById(R.id.dot_2);
@@ -51,7 +52,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.list_play:
-                mViewPager.setCurrentItem(0);
+                mViewPager.setCurrentItem(1);
                 break;
         }
     }
@@ -74,8 +75,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void changeDot(int index){
-        switch (index){
+    private void changeDot(int index) {
+        switch (index) {
             case 0:
                 ViewGroup.LayoutParams lp1 = dot1.getLayoutParams();
                 lp1.width = 8;
@@ -96,7 +97,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                 np2.height = 6;
                 dot1.setLayoutParams(np2);
                 break;
-            default: break;
+            default:
+                break;
         }
     }
 
