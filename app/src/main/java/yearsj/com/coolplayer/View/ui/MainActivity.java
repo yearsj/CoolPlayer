@@ -8,11 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,10 +19,10 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import yearsj.com.coolplayer.View.fragment.AlbumListFragment;
-import yearsj.com.coolplayer.View.fragment.PlayingFragment;
-import yearsj.com.coolplayer.View.fragment.SingerListFragment;
-import yearsj.com.coolplayer.View.fragment.SongsListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.AlbumListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.PlayingFragment;
+import yearsj.com.coolplayer.View.ui.fragment.SingerListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.SongsListFragment;
 
 public class MainActivity extends FragmentActivity{
 	/**弹出菜单*/

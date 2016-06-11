@@ -1,4 +1,4 @@
-package yearsj.com.coolplayer.View.fragment;
+package yearsj.com.coolplayer.View.ui.fragment;
 
 import  android.support.v4.app.Fragment;
 import android.graphics.drawable.Drawable;
@@ -12,17 +12,24 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-
+import java.util.List;
+import yearsj.com.coolplayer.View.adapter.SortAdapter;
+import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
+import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
+import yearsj.com.coolplayer.View.util.CharacterParser;
+import yearsj.com.coolplayer.View.util.PinyinComparator;
+
 
 /**
  * Created by bing on 2016/6/2.
  */
-public class SingerListFragment extends Fragment {
-    private Drawable poster;
+public class SongsListFragment extends Fragment {
     /**
      * 事件列表
      **/
@@ -30,7 +37,17 @@ public class SingerListFragment extends Fragment {
     private View view;
     LayoutInflater inflater;
 
-    final String POSTER = "poster";
+    private SortAdapter adapter;
+    private CharacterSideBarView sideBar;
+    private TextView dialog;
+
+    private PinyinComparator pinyinComparator;
+    private CharacterParser characterParser;
+    private List<SortModel> sourceDataList;
+    private int listViewHeight,oneListHight;
+    private List<String>  titles=new ArrayList<String>();
+
+
     final String TITLE = "title";
     final String INFO = "info";
 
@@ -42,7 +59,7 @@ public class SingerListFragment extends Fragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         this.inflater = inflater;
-        view = inflater.inflate(R.layout.fragment_singer, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+        view = inflater.inflate(R.layout.fragment_songs, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
         initial();
     }
 
@@ -55,14 +72,18 @@ public class SingerListFragment extends Fragment {
             return;
         }
         int totalHeight = 0;
+
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
+//        if(listAdapter.getCount()!=0)
+//        oneListHight= listItem.getMeasuredHeight()+listView.getDividerHeight();
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
+        listViewHeight=getActivity().getWindowManager().getDefaultDisplay().getHeight()/3*2;
     }
 
 
@@ -81,34 +102,64 @@ public class SingerListFragment extends Fragment {
     }
 
     void initial() {
-        list = (ListView) view.findViewById(R.id.singerListView);
+        list = (ListView) view.findViewById(R.id.songListView);
+        sideBar = (CharacterSideBarView) view.findViewById(R.id.sidebars);
+        dialog = (TextView)view.findViewById(R.id.adialog);
+        characterParser = CharacterParser.getInstance();
+        pinyinComparator = new PinyinComparator();
+
         loadData();
         setListViewHeightBasedOnChildren(list);
         setOnListListener();
+
+        sideBar.setTextView(dialog, listViewHeight);
+        sideBar.setOnTouchingLetterChangedListener(new CharacterSideBarView.OnTouchingLetterChangedListener() {
+
+            @Override
+            public void onTouchingLetterChanged(String s) {
+                final int position = adapter.getPositionForSection(s.charAt(0));
+                System.out.println("position================"+position);
+                Log.i("position",position+"");
+                if (position != -1) {
+                    list.requestFocus();
+                    list.setItemChecked(position, true);
+                    list.setSelectionFromTop(position,oneListHight);
+                    list.smoothScrollToPosition(position);
+
+                }
+
+            }
+        });
     }
 
     void loadData() {
         ArrayList<HashMap<String, Object>> mylist = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> map;
+        char aChar='a';
+
         for (int i = 0; i < 10; i++) {
             map = new HashMap<String, Object>();
-            map.put(POSTER, this.getResources().getDrawable(R.drawable.poster));
-            map.put(TITLE, "陈奕迅");
+            aChar=(char)(aChar + 1);
+            String title=aChar+"陈奕迅";
+            map.put(TITLE, title);
             map.put(INFO, "好久不见·认了吧");
+            titles.add(title);
             mylist.add(map);
         }
 
-        SimpleAdapter singerAdapter = new SimpleAdapter(view.getContext(),
+        sourceDataList = filledData(titles);
+        Collections.sort(sourceDataList, pinyinComparator);
+        adapter = new SortAdapter(view.getContext(),
                 mylist,
-                R.layout.two_item_with_img_list,
+                R.layout.two_item_list,
 
 
-                new String[]{POSTER, TITLE, INFO},
+                new String[]{ TITLE, INFO},
 
 
-                new int[]{R.id.poster, R.id.titleView, R.id.infoView});
+                new int[]{ R.id.titleView, R.id.infoView},sourceDataList);
 
-        singerAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data,
                                         String textRepresentation) {
@@ -121,8 +172,8 @@ public class SingerListFragment extends Fragment {
             }
         });
 
-        list.setAdapter(singerAdapter);
-
+     //   list.setAdapter(singerAdapter);
+     list.setAdapter(adapter);
 
     }
 
@@ -138,11 +189,32 @@ public class SingerListFragment extends Fragment {
                                     int position, long id) {
                 // TODO 自动生成的方法存根
 
-//                System.out.println(id);
+
             }
 
         });
 
+    }
+
+
+    private List<SortModel> filledData(List<String> data) {
+        List<SortModel> mSortList = new ArrayList<SortModel>();
+
+        for (int i = 0; i < data.size(); i++) {
+            SortModel sortModel = new SortModel();
+            sortModel.setName(data.get(i));
+
+            String pinyin = characterParser.getSelling(data.get(i));
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+
+            if (sortString.matches("[A-Z]")) {
+                sortModel.setSortLetters(sortString.toUpperCase());
+            } else {
+                sortModel.setSortLetters("#");
+            }
+            mSortList.add(sortModel);
+        }
+        return mSortList;
     }
 }
 

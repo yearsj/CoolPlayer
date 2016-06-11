@@ -1,8 +1,7 @@
-package yearsj.com.coolplayer.View.fragment;
+package yearsj.com.coolplayer.View.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,9 +18,6 @@ import android.widget.SimpleAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import yearsj.com.coolplayer.View.adapter.ChangeTextColorAdapter;
-import yearsj.com.coolplayer.View.ui.FindLocalMusicActivity;
-import yearsj.com.coolplayer.View.ui.MainActivity;
-import yearsj.com.coolplayer.View.ui.PlayActivity;
 import yearsj.com.coolplayer.View.ui.R;
 
 @SuppressLint("NewApi")

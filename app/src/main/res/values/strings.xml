@@ -18,4 +18,41 @@
     <string name="findLocalMusic">一键扫描本地音乐</string>
     <string name="findMusic">扫描歌曲</string>
     <string name="findMusicButton">一键扫描</string>
+
+    <string name="favorite">Favorite</string>
+    <string name="drawer_allmusic_title">All Music</string>
+    <string name="drawer_album_title">Albums</string>
+    <string name="drawer_singer_title">Singer</string>
+    <string name="drawer_playlists_title">Playlists</string>
+    <string name="open_content_drawer">Close content menu</string>
+    <string name="close_content_drawer">Close content menu</string>
+    <string name="error_no_connection">Cannot connect to server. Please, check your Internet connectivity.</string>
+    <string name="error_loading_media">Error Loading Media</string>
+    <string name="random_queue_title">Random music</string>
+
+    <string name="currently_playing_song">Song currently playing</string>
+    <string name="currently_playing_artist">Artist of currently playing song</string>
+    <string name="currently_playing_extra_info">Extra info for currently playing song</string>
+    <string name="play_item">Play item</string>
+    <string name="play_pause">play or pause</string>
+    <string name="skip_next">skip to next</string>
+    <string name="skip_prev">skip to previous</string>
+
+    <string name="error_no_metadata">不能检索数据.</string>
+    <string name="browse_albums">专辑列表</string>
+    <string name="browse_album_subtitle">专辑歌曲</string>
+    <string name="browse_musics_by_album_subtitle">%1$s 歌曲</string>
+
+
+
+    <string name="home_title">Home</string>
+    <string name="related_content_header">You may also like</string>
+    <string name="action_listen">Listen</string>
+    <string name="placeholder_message">This is a placeholder for your application code.</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="background_image_str">Background image for album art</string>
+    <string name="search_queue_title">Search results</string>
+    <string name="no_search_results">No search results.</string>
+    <string name="loading">Loading…</string>
+    <string name="media_route_menu_title">Play on…</string>
 </resources>

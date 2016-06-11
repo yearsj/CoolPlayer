@@ -74,7 +74,7 @@
         android:layout_height="wrap_content">
         <fragment
             android:id="@+id/id_fragment_playing"
-            android:name="yearsj.com.coolplayer.View.fragment.PlayingFragment"
+            android:name="yearsj.com.coolplayer.View.ui.fragment.PlayingFragment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             />

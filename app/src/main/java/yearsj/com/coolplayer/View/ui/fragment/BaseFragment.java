@@ -1,4 +1,4 @@
-package yearsj.com.coolplayer.View.fragment;
+package yearsj.com.coolplayer.View.ui.fragment;
 
 import android.support.v4.app.Fragment;
 

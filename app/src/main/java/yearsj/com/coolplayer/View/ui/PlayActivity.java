@@ -1,7 +1,5 @@
 package yearsj.com.coolplayer.View.ui;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,8 +11,8 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 import yearsj.com.coolplayer.View.adapter.MyFragmentAdapter;
-import yearsj.com.coolplayer.View.fragment.AlbumFragment;
-import yearsj.com.coolplayer.View.fragment.PlayListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.AlbumFragment;
+import yearsj.com.coolplayer.View.ui.fragment.PlayListFragment;
 
 /**
  * Created by yearsj on 2016/6/4.

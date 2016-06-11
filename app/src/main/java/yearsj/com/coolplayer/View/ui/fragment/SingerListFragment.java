@@ -1,4 +1,4 @@
-package yearsj.com.coolplayer.View.fragment;
+package yearsj.com.coolplayer.View.ui.fragment;
 
 import  android.support.v4.app.Fragment;
 import android.graphics.drawable.Drawable;
@@ -18,7 +18,10 @@ import java.util.HashMap;
 
 import yearsj.com.coolplayer.View.ui.R;
 
-public class AlbumListFragment extends Fragment {
+/**
+ * Created by bing on 2016/6/2.
+ */
+public class SingerListFragment extends Fragment {
     private Drawable poster;
     /**
      * 事件列表
@@ -35,28 +38,15 @@ public class AlbumListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-        Log.v("yearsj", "album-->onCreate()");
+        Log.v("yearsj", "fragment1-->onCreate()");
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         this.inflater = inflater;
-        view = inflater.inflate(R.layout.fragment_album, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+        view = inflater.inflate(R.layout.fragment_singer, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
         initial();
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.v("yearsj", "album-->onCreateView()");
-
-        ViewGroup p = (ViewGroup) view.getParent();
-        if (p != null) {
-            p.removeAllViewsInLayout();
-            Log.v("yearsj", "fragment1-->移除已存在的View");
-        }
-
-        return view;
-    }
 
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -75,8 +65,23 @@ public class AlbumListFragment extends Fragment {
         listView.setLayoutParams(params);
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.v("yearsj", "fragment1-->onCreateView()");
+
+        ViewGroup p = (ViewGroup) view.getParent();
+        if (p != null) {
+            p.removeAllViewsInLayout();
+            Log.v("yearsj", "fragment1-->移除已存在的View");
+        }
+
+        return view;
+    }
+
     void initial() {
-        list = (ListView) view.findViewById(R.id.albumListView);
+        list = (ListView) view.findViewById(R.id.singerListView);
         loadData();
         setListViewHeightBasedOnChildren(list);
         setOnListListener();
@@ -85,7 +90,7 @@ public class AlbumListFragment extends Fragment {
     void loadData() {
         ArrayList<HashMap<String, Object>> mylist = new ArrayList<HashMap<String, Object>>();
         HashMap<String, Object> map;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             map = new HashMap<String, Object>();
             map.put(POSTER, this.getResources().getDrawable(R.drawable.poster));
             map.put(TITLE, "陈奕迅");
@@ -93,7 +98,7 @@ public class AlbumListFragment extends Fragment {
             mylist.add(map);
         }
 
-        SimpleAdapter albumAdapter = new SimpleAdapter(view.getContext(),
+        SimpleAdapter singerAdapter = new SimpleAdapter(view.getContext(),
                 mylist,
                 R.layout.two_item_with_img_list,
 
@@ -103,7 +108,7 @@ public class AlbumListFragment extends Fragment {
 
                 new int[]{R.id.poster, R.id.titleView, R.id.infoView});
 
-        albumAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+        singerAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data,
                                         String textRepresentation) {
@@ -116,7 +121,7 @@ public class AlbumListFragment extends Fragment {
             }
         });
 
-        list.setAdapter(albumAdapter);
+        list.setAdapter(singerAdapter);
 
 
     }
@@ -140,3 +145,4 @@ public class AlbumListFragment extends Fragment {
 
     }
 }
+
