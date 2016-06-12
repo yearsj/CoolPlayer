@@ -2,23 +2,36 @@ package yearsj.com.coolplayer.View.ui.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import yearsj.com.coolplayer.View.adapter.ChangeTextColorAdapter;
 import yearsj.com.coolplayer.View.ui.R;
+import yearsj.com.coolplayer.View.util.AlbumArtCache;
+import yearsj.com.coolplayer.View.util.LogHelper;
 
 @SuppressLint("NewApi")
 public class PlayingFragment extends Fragment{
@@ -28,6 +41,13 @@ public class PlayingFragment extends Fragment{
 	/**播放列表*/
 	private View showPlayListLayout;
 	private View  playListLayout;
+	private ImageView mPlayPause;
+	private TextView mTitle;
+	private TextView mSubtitle;
+	private ImageView mAlbumArt;
+
+	private String mArtUrl;
+
 	static boolean  showList=false;
 
 	private Drawable poster;
@@ -41,6 +61,7 @@ public class PlayingFragment extends Fragment{
 	final String STATE = "state";
 	final String TITLE = "title";
 	final String INFO = "info";
+	private static final String TAG = LogHelper.makeLogTag(PlayingFragment.class.getSimpleName());
 
 	@Override  
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,  
@@ -56,6 +77,11 @@ public class PlayingFragment extends Fragment{
 		playListLayout=view.findViewById(R.id.playListLayout);
 		showPlayListLayout=view.findViewById(R.id.fragment_play_list);
 		list = (ListView) view.findViewById(R.id.playLists);
+		mTitle=(TextView)view.findViewById(R.id.musicName);
+		mSubtitle=(TextView)view.findViewById(R.id.musicInfo);
+		mAlbumArt=(ImageView)view.findViewById(R.id.poster);
+		mPlayPause=(ImageView)view.findViewById(R.id.playMusic);
+
 		loadData();
 		setListViewHeightBasedOnChildren(list);
 		setOnListListener();
@@ -157,5 +183,122 @@ public class PlayingFragment extends Fragment{
 		});
 
 	}
+
+	public void onConnected() {
+		MediaControllerCompat controller = ((FragmentActivity) getActivity())
+				.getSupportMediaController();
+		LogHelper.d(TAG, "onConnected, mediaController==null? ", controller == null);
+		if (controller != null) {
+			onMetadataChanged(controller.getMetadata());
+			onPlaybackStateChanged(controller.getPlaybackState());
+			controller.registerCallback(mCallback);
+		}
+	}
+
+	private final MediaControllerCompat.Callback mCallback = new MediaControllerCompat.Callback() {
+		@Override
+		public void onPlaybackStateChanged(PlaybackStateCompat state) {
+			LogHelper.d(TAG, "Received playback state change to state ", state.getState());
+			PlayingFragment.this.onPlaybackStateChanged(state);
+		}
+
+		@Override
+		public void onMetadataChanged(MediaMetadataCompat metadata) {
+			if (metadata == null) {
+				return;
+			}
+			LogHelper.d(TAG, "Received metadata state change to mediaId=",
+					metadata.getDescription().getMediaId(),
+					" song=", metadata.getDescription().getTitle());
+			PlayingFragment.this.onMetadataChanged(metadata);
+		}
+	};
+
+	private void onMetadataChanged(MediaMetadataCompat metadata) {
+		LogHelper.d(TAG, "onMetadataChanged ", metadata);
+		if (getActivity() == null) {
+			LogHelper.w(TAG, "onMetadataChanged called when getActivity null," +
+					"this should not happen if the callback was properly unregistered. Ignoring.");
+			return;
+		}
+		if (metadata == null) {
+			return;
+		}
+
+		mTitle.setText(metadata.getDescription().getTitle());
+		mSubtitle.setText(metadata.getDescription().getSubtitle());
+
+
+		String artUrl = null;
+		if (metadata.getDescription().getIconUri() != null) {
+			artUrl = metadata.getDescription().getIconUri().toString();
+		}
+		if (!TextUtils.equals(artUrl, mArtUrl)) {
+			mArtUrl = artUrl;
+			Bitmap art = metadata.getDescription().getIconBitmap();
+			AlbumArtCache cache = AlbumArtCache.getInstance();
+			if (art == null) {
+				art = cache.getIconImage(mArtUrl);
+			}
+			if (art != null) {
+				mAlbumArt.setImageBitmap(art);
+			} else {
+				cache.fetch(artUrl, new AlbumArtCache.FetchListener() {
+							@Override
+							public void onFetched(String artUrl, Bitmap bitmap, Bitmap icon) {
+								if (icon != null) {
+									LogHelper.d(TAG, "album art icon of w=", icon.getWidth(),
+											" h=", icon.getHeight());
+									if (isAdded()) {
+										mAlbumArt.setImageBitmap(icon);
+									}
+								}
+							}
+						}
+				);
+			}
+		}
+
+
+		Bitmap defaultArt = BitmapFactory.decodeResource(getResources(),
+				R.mipmap.ic_launcher);
+		if (isAdded() && artUrl == null) {
+			mAlbumArt.setImageBitmap(defaultArt);
+		}
+	}
+
+	private void onPlaybackStateChanged(PlaybackStateCompat state) {
+		LogHelper.d(TAG, "onPlaybackStateChanged ", state);
+		if (getActivity() == null) {
+			LogHelper.w(TAG, "onPlaybackStateChanged called when getActivity null," +
+					"this should not happen if the callback was properly unregistered. Ignoring.");
+			return;
+		}
+		if (state == null) {
+			return;
+		}
+		boolean enablePlay = false;
+		switch (state.getState()) {
+			case PlaybackStateCompat.STATE_PAUSED:
+			case PlaybackStateCompat.STATE_STOPPED:
+				enablePlay = true;
+				break;
+			case PlaybackStateCompat.STATE_ERROR:
+				LogHelper.e(TAG, "error playbackstate: ", state.getErrorMessage());
+				Toast.makeText(getActivity(), state.getErrorMessage(), Toast.LENGTH_LONG).show();
+				break;
+		}
+
+		if (enablePlay) {
+			mPlayPause.setImageDrawable(
+					ContextCompat.getDrawable(getActivity(), R.drawable.play));
+		} else {
+			mPlayPause.setImageDrawable(
+					ContextCompat.getDrawable(getActivity(),  R.drawable.pause));
+		}
+	}
+
+
+
 
 }
