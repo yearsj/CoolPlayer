@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import yearsj.com.coolplayer.View.adapter.SortAdapter;
+import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.model.MediaFragmentListener;
 import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
@@ -39,7 +40,6 @@ import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.MediaIDHelper;
 import yearsj.com.coolplayer.View.util.PinyinComparator;
-
 
 /**
  * Created by bing on 2016/6/2.
@@ -61,19 +61,17 @@ public class SongsListFragment extends Fragment {
     private PinyinComparator pinyinComparator;
     private CharacterParser characterParser;
     private List<SortModel> sourceDataList;
-    private int listViewHeight,oneListHight;
+    private int listViewHeight;
 
-    private List<String>  titles=new ArrayList<String>();
-    List<MediaBrowserCompat.MediaItem> songs=new  ArrayList<MediaBrowserCompat.MediaItem>();
-    private MediaFragmentListener mMediaFragmentListener;
+    private List<String>  titles;
+    List<MediaBrowserCompat.MediaItem> songs;
+    private MediaBrowserProvider mediaBrowserProvider;
 
     private static final String TAG = LogHelper.makeLogTag(SongsListFragment.class.getSimpleName());
     private static final String ARG_MEDIA_ID = "media_id";
     final String TITLE = "title";
     final String INFO = "info";
 
-    // Receive callbacks from the MediaController. Here we update our state such as which queue
-    // is being shown, the current title and description and the PlaybackState.
     private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
         @Override
         public void onPlaybackStateChanged(PlaybackStateCompat state) {
@@ -103,6 +101,8 @@ public class SongsListFragment extends Fragment {
                         LogHelper.d(TAG, "fragment onChildrenLoaded, parentId=" + parentId +
                                 "  count=" + children.size());
                         adapter.clear();
+                        titles=new ArrayList<String>();
+                        songs=children;
                         for (MediaBrowserCompat.MediaItem item : children) {
                             Map<String,String> map=new HashMap<String, String>();
                             String title=item.getDescription().getTitle().toString();
@@ -116,6 +116,7 @@ public class SongsListFragment extends Fragment {
                             adapter.add(map,sourceDataList);
                         }
                         adapter.notifyDataSetChanged();
+                        setListViewHeightBasedOnChildren(list);
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
                     }
@@ -128,6 +129,13 @@ public class SongsListFragment extends Fragment {
                 }
             };
 
+    public static final SongsListFragment newInstance(String mediaId){
+        SongsListFragment songsListFragment = new SongsListFragment();
+        Bundle bd = new Bundle();
+        bd.putString("mediaId",mediaId);
+        songsListFragment.setArguments(bd);
+        return songsListFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,7 +150,10 @@ public class SongsListFragment extends Fragment {
     }
 
 
-
+    /**
+     * 根据listView的数据个数动态的改变高度
+     * @param listView
+     */
     private void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -160,7 +171,6 @@ public class SongsListFragment extends Fragment {
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
-        listViewHeight=getActivity().getWindowManager().getDefaultDisplay().getHeight()/3*2;
     }
 
 
@@ -185,10 +195,12 @@ public class SongsListFragment extends Fragment {
         characterParser = CharacterParser.getInstance();
         pinyinComparator = new PinyinComparator();
 
-        loadData();
-        setListViewHeightBasedOnChildren(list);
+        mMediaId=getArguments().getString("mediaId");
+
+        loadAdapter();
         setOnListListener();
 
+        listViewHeight=getActivity().getWindowManager().getDefaultDisplay().getHeight()/3*2;
         sideBar.setTextView(dialog, listViewHeight);
         sideBar.setOnTouchingLetterChangedListener(new CharacterSideBarView.OnTouchingLetterChangedListener() {
 
@@ -198,10 +210,13 @@ public class SongsListFragment extends Fragment {
                 System.out.println("position================"+position);
                 Log.i("position",position+"");
                 if (position != -1) {
-                    list.requestFocus();
-                    list.setItemChecked(position, true);
-                    list.setSelectionFromTop(position,oneListHight);
-                    list.smoothScrollToPosition(position);
+//                    list.requestFocus();
+//                    list.setItemChecked(position, true);
+//                    list.setSelectionFromTop(position,oneListHight);
+//                    list.smoothScrollToPosition(position);
+                    list.setSelection(position);
+                    list.smoothScrollToPositionFromTop(position, 0, 500);//滑动到position  距离top的偏移量  滑动所用的时间
+                    adapter.notifyDataSetInvalidated();
 
                 }
 
@@ -209,21 +224,13 @@ public class SongsListFragment extends Fragment {
         });
     }
 
-    void loadData() {
+    /**
+     * 设置适配器
+     */
+    void loadAdapter() {
         ArrayList<HashMap<String, Object>> mylist = new ArrayList<HashMap<String, Object>>();
-        HashMap<String, Object> map;
 
-        for (int i = 0; i < songs.size(); i++) {
-            map = new HashMap<String, Object>();
-            String title=songs.get(i).getDescription().getTitle().toString();
-            String info=songs.get(i).getDescription().getSubtitle().toString();
-            map.put(TITLE, title);
-            map.put(INFO, info);
-            titles.add(title);
-            mylist.add(map);
-        }
-
-        sourceDataList = filledData(titles);
+        sourceDataList = filledData(new ArrayList<String>());
         Collections.sort(sourceDataList, pinyinComparator);
         adapter = new SortAdapter(view.getContext(),
                 mylist,
@@ -235,20 +242,6 @@ public class SongsListFragment extends Fragment {
 
                 new int[]{ R.id.titleView, R.id.infoView},sourceDataList);
 
-        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-                if (view instanceof ImageView && data instanceof Drawable) {
-                    ImageView iv = (ImageView) view;
-                    iv.setImageDrawable((Drawable) data);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-     //   list.setAdapter(singerAdapter);
      list.setAdapter(adapter);
 
     }
@@ -264,7 +257,8 @@ public class SongsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO 自动生成的方法存根
-
+                MediaBrowserCompat.MediaItem playingMusic=songs.get(position);
+                mediaBrowserProvider.onMediaItemSelected(playingMusic);
 
             }
 
@@ -273,6 +267,11 @@ public class SongsListFragment extends Fragment {
     }
 
 
+    /**
+     * 获取data的首字母
+     * @param data
+     * @return
+     */
     private List<SortModel> filledData(List<String> data) {
         List<SortModel> mSortList = new ArrayList<SortModel>();
 
@@ -298,13 +297,13 @@ public class SongsListFragment extends Fragment {
         super.onAttach(activity);
         // If used on an activity that doesn't implement MediaFragmentListener, it
         // will throw an exception as expected:
-        mMediaFragmentListener = (MediaFragmentListener) activity;
+        mediaBrowserProvider = (MediaBrowserProvider) activity;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mMediaFragmentListener = null;
+        mediaBrowserProvider = null;
     }
 
     @Override
@@ -312,7 +311,7 @@ public class SongsListFragment extends Fragment {
         super.onStart();
 
         // fetch browsing information to fill the listview:
-        MediaBrowserCompat mediaBrowser = mMediaFragmentListener.getMediaBrowser();
+        MediaBrowserCompat mediaBrowser = mediaBrowserProvider.getMediaBrowser();
 
         LogHelper.v(TAG, "fragment.onStart, mediaId=" + mMediaId +
                 "  onConnected=" + mediaBrowser.isConnected());
@@ -326,7 +325,7 @@ public class SongsListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        MediaBrowserCompat mediaBrowser = mMediaFragmentListener.getMediaBrowser();
+        MediaBrowserCompat mediaBrowser = mediaBrowserProvider.getMediaBrowser();
         if (mediaBrowser != null && mediaBrowser.isConnected() && mMediaId != null) {
             mediaBrowser.unsubscribe(mMediaId);
         }
@@ -337,43 +336,19 @@ public class SongsListFragment extends Fragment {
         }
     }
 
-    public String getMediaId() {
-        Bundle args = getArguments();
-        if(args != null) {
-            return args.getString(ARG_MEDIA_ID);
-        }
-        return null;
-    }
-
-    public void setMediaId(String mediaId) {
-        Bundle args = new Bundle(1);
-        args.putString(SongsListFragment.ARG_MEDIA_ID, mediaId);
-        setArguments(args);
-    }
-
 
     public void onConnected() {
         if (isDetached()) {
             return;
         }
-        mMediaId = getMediaId();
+
         if (mMediaId == null) {
-            mMediaId = mMediaFragmentListener.getMediaBrowser().getRoot();
+            mMediaId = mediaBrowserProvider.getMediaBrowser().getRoot();
         }
       //  updateTitle();
+        mediaBrowserProvider.getMediaBrowser().unsubscribe(mMediaId);
 
-        // Unsubscribing before subscribing is required if this mediaId already has a subscriber
-        // on this MediaBrowser instance. Subscribing to an already subscribed mediaId will replace
-        // the callback, but won't trigger the initial callback.onChildrenLoaded.
-        //
-        // This is temporary: A bug is being fixed that will make subscribe
-        // consistently call onChildrenLoaded initially, no matter if it is replacing an existing
-        // subscriber or not. Currently this only happens if the mediaID has no previous
-        // subscriber or if the media content changes on the service side, so we need to
-        // unsubscribe first.
-        mMediaFragmentListener.getMediaBrowser().unsubscribe(mMediaId);
-
-        mMediaFragmentListener.getMediaBrowser().subscribe(mMediaId, mSubscriptionCallback);
+        mediaBrowserProvider.getMediaBrowser().subscribe(mMediaId, mSubscriptionCallback);
 
         // Add MediaController callback so we can redraw the list when metadata changes:
         MediaControllerCompat controller = ((FragmentActivity) getActivity())

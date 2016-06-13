@@ -7,11 +7,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<<<<<<< HEAD
-=======
-    <uses-permission android:name="android.permission."/>
-
->>>>>>> 8cfd57972b35a715104a5dd253e55cd9eca60268
 
     <application
         android:allowBackup="true"

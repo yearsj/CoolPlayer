@@ -1,5 +1,6 @@
 package yearsj.com.coolplayer.View.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,8 +47,8 @@ public class SortAdapter extends SimpleAdapter implements SectionIndexer {
 	}
 
 	public void clear() {
-		this.data = null;
-		this.list = null;
+		this.data.clear();
+		this.list.clear();
 		notifyDataSetChanged();
 	}
 
