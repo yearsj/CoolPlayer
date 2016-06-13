@@ -130,7 +130,10 @@ public class ItemFragment extends Fragment {
         setOnListListener();
 
         mMediaId=getArguments().getString("mediaId");
-        changeTitle(mMediaId);
+        String title=mMediaId.substring(mMediaId.indexOf("/")+1);
+        if(title.length()>7)
+            title=title.substring(0,7)+"...";
+        changeTitle(title);
 
         backImage= (ImageView)view.findViewById(R.id.back);
         backImage.setOnClickListener(new View.OnClickListener() {

@@ -35,6 +35,7 @@ import yearsj.com.coolplayer.View.service.MusicService;
 import yearsj.com.coolplayer.View.ui.fragment.BrowerFragment;
 import yearsj.com.coolplayer.View.ui.fragment.ItemFragment;
 import yearsj.com.coolplayer.View.ui.fragment.MainFragment;
+import yearsj.com.coolplayer.View.ui.fragment.PlayingFragment;
 import yearsj.com.coolplayer.View.ui.fragment.SongsListFragment;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.MediaIDHelper;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 	private ItemFragment itemFragment;
 	private MainFragment mainFragment;
+	private PlayingFragment playingFragment;
 	private MediaBrowserCompat mediaBrowserCompat;
 
 
@@ -60,15 +62,16 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		mediaBrowserCompat= new MediaBrowserCompat(this,
 				new ComponentName(this, MusicService.class), mConnectionCallback, null);
 
-
+		playingFragment = (PlayingFragment) getFragmentManager()
+				.findFragmentById(R.id.id_fragment_playing);
 	//	initializeFromParams(savedInstanceState,getIntent());
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
+		hidePlaybackControls();
 		mediaBrowserCompat.connect();
-
 	}
 
 	@Override
@@ -100,26 +103,52 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 		showMainContent();
 
-//		if (mControlsFragment != null) {
-//			mControlsFragment.onConnected();
-//		}
-//		onMediaControllerConnected();
+		if (playingFragment != null) {
+			playingFragment.onConnected();
+		}
 	}
 
 	private final MediaControllerCompat.Callback mMediaControllerCallback =
 			new MediaControllerCompat.Callback() {
 				@Override
 				public void onPlaybackStateChanged(PlaybackStateCompat state) {
-
+					if (shouldShowControls()) {
+						showPlaybackControls();
+					} else {
+						LogHelper.d(TAG, "mediaControllerCallback.onPlaybackStateChanged: " +
+								"hiding controls because state is ", state.getState());
+						hidePlaybackControls();
+					}
 				}
 
 				@Override
 				public void onMetadataChanged(MediaMetadataCompat metadata) {
-
+					if (shouldShowControls()) {
+						showPlaybackControls();
+					} else {
+						LogHelper.d(TAG, "mediaControllerCallback.onMetadataChanged: " +
+								"hiding controls because metadata is null");
+						hidePlaybackControls();
+					}
 				}
 			};
 
-
+	protected boolean shouldShowControls() {
+		MediaControllerCompat mediaController = getSupportMediaController();
+		if (mediaController == null ||
+				mediaController.getMetadata() == null ||
+				mediaController.getPlaybackState() == null) {
+			return false;
+		}
+		switch (mediaController.getPlaybackState().getState()) {
+			case PlaybackStateCompat.STATE_ERROR:
+			case PlaybackStateCompat.STATE_NONE:
+			case PlaybackStateCompat.STATE_STOPPED:
+				return false;
+			default:
+				return true;
+		}
+	}
 
 
 	public void showPlayInfo(View v){
@@ -150,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 	/**
 	 *
-	 * @param mediaId
      */
 //	public void setNavigationItem(String mediaId) {
 //		LogHelper.d(TAG, "Setting navigation view mediaId to ", mediaId);
@@ -160,6 +188,24 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 //			mainFragment.setNavigationItem(mediaId);
 //		}
 //	}
+
+	protected void showPlaybackControls() {
+		LogHelper.d(TAG, "showPlaybackControls");
+
+		getFragmentManager().beginTransaction()
+				.show(playingFragment)
+				.commit();
+		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
+	}
+
+
+	protected void hidePlaybackControls() {
+		LogHelper.d(TAG, "hidePlaybackControls");
+		getFragmentManager().beginTransaction()
+				.hide(playingFragment)
+				.commit();
+		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
+	}
 
 
 

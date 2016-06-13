@@ -44,14 +44,12 @@
         android:background="@color/white"
         />
 
-    <ListView
-        android:id="@+id/playLists"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/deepdarkGrey"
-        >
-
-    </ListView>
+   <!--<fragment-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:id="@+id/playListFragment"-->
+       <!--android:name="yearsj.com.coolplayer.View.ui.fragment.PlayListFragment"-->
+       <!--/>-->
 
     <View
         android:layout_width="fill_parent"
