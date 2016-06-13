@@ -30,9 +30,8 @@ import yearsj.com.coolplayer.View.adapter.BrowerAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.LogHelper;
-import yearsj.com.coolplayer.View.util.MediaIDHelper;
 
-public class AlbumListFragment extends Fragment {
+public class BrowerFragment extends Fragment {
     private Drawable poster;
     /**
      * 事件列表
@@ -43,7 +42,7 @@ public class AlbumListFragment extends Fragment {
     private static final String ARG_MEDIA_ID = "media_id";
     private String mMediaId;
     private MediaBrowserProvider mediaBrowserProvider;
-    private static final String TAG = LogHelper.makeLogTag(AlbumListFragment.class.getSimpleName());
+    private static final String TAG = LogHelper.makeLogTag(BrowerFragment.class.getSimpleName());
 
     final String POSTER = "poster";
     final String TITLE = "title";
@@ -71,12 +70,12 @@ public class AlbumListFragment extends Fragment {
     };
 
 
-    public static final AlbumListFragment newInstance(String mediaId){
-        AlbumListFragment albumListFragment = new AlbumListFragment();
+    public static final BrowerFragment newInstance(String mediaId){
+        BrowerFragment browerFragment = new BrowerFragment();
         Bundle bd = new Bundle();
         bd.putString("mediaId",mediaId);
-        albumListFragment.setArguments(bd);
-        return albumListFragment;
+        browerFragment.setArguments(bd);
+        return browerFragment;
     }
 
 

@@ -31,9 +31,8 @@ import java.util.List;
 
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.service.MusicService;
-import yearsj.com.coolplayer.View.ui.fragment.AlbumListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.BrowerFragment;
 import yearsj.com.coolplayer.View.ui.fragment.ItemFragment;
-import yearsj.com.coolplayer.View.ui.fragment.SingerListFragment;
 import yearsj.com.coolplayer.View.ui.fragment.SongsListFragment;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.MediaIDHelper;
@@ -55,9 +54,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 	private String browerType=MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM;
 
 	ViewPager pager;
-	SingerListFragment singerListFragment;
-	SongsListFragment songsListFragment;
-	AlbumListFragment albumListFragment;
+
 	ArrayList<Fragment> fragmentsContainter;
 	ArrayList<String>   titleContainer    = new ArrayList<String>();
 
@@ -140,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		pager = (ViewPager) findViewById((R.id.viewpager));
 		fragmentsContainter = new ArrayList<Fragment>();
 		fragmentsContainter.add(SongsListFragment.newInstance(MediaIDHelper.MEDIA_ID_ROOT));
-		fragmentsContainter.add(AlbumListFragment.newInstance(MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER));
-		fragmentsContainter.add(AlbumListFragment.newInstance(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM));
+		fragmentsContainter.add(BrowerFragment.newInstance(MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER));
+		fragmentsContainter.add(BrowerFragment.newInstance(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM));
 
 		mTabLayout = (TabLayout)findViewById(R.id.tabs);
 
@@ -159,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		pager.setAdapter(myViewPager);
 		mTabLayout.setupWithViewPager(pager);//将TabLayout和ViewPager关联起来
 		mTabLayout.setTabsFromPagerAdapter(myViewPager);
+
+
 	}
 
 	class MyViewPager extends FragmentPagerAdapter {
