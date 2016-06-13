@@ -27,6 +27,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import yearsj.com.coolplayer.View.adapter.MyFragmentAdapter;
+import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.service.MusicService;
 import yearsj.com.coolplayer.View.ui.fragment.AlbumFragment;
 import yearsj.com.coolplayer.View.ui.fragment.PlayListFragment;
@@ -39,7 +40,7 @@ import static android.view.View.VISIBLE;
 /**
  * Created by yearsj on 2016/6/4.
  */
-public class PlayActivity extends FragmentActivity implements View.OnClickListener{
+public class PlayActivity extends FragmentActivity implements View.OnClickListener,MediaBrowserProvider {
 
     private ViewPager mViewPager;
     private List<Fragment> fragments;
@@ -67,13 +68,28 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         //获得从前面一控件返回的播放音乐信息
         Intent intent = getIntent();
         if (intent != null) {
-            MediaDescriptionCompat description = intent.getParcelableExtra("music_description");
-            if (null!=description) {
-                updateCompnent(description);
+            MediaBrowserCompat.MediaItem mediaItem = intent.getParcelableExtra("mediaItem");
+            if (null!=mediaItem) {
+                updateCompnent(mediaItem.getDescription());
             }
         }
 
         mMediaBrowser = new MediaBrowserCompat(this, new ComponentName(this, MusicService.class), mConnectionCallback, null);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mMediaBrowser.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (getSupportMediaController() != null) {
+            getSupportMediaController().unregisterCallback(mControllerCallback);
+        }
+        mMediaBrowser.disconnect();
     }
 
     private void updateCompnent(MediaDescriptionCompat description){
@@ -150,7 +166,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                 }
             };
 
-    private final MediaControllerCompat.Callback mCallback = new MediaControllerCompat.Callback() {
+    private final MediaControllerCompat.Callback mControllerCallback = new MediaControllerCompat.Callback() {
         @Override
         //当前播放状态的改变
         public void onPlaybackStateChanged(@NonNull PlaybackStateCompat state) {
@@ -175,7 +191,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
             return;
         }
         setSupportMediaController(mediaController);
-        mediaController.registerCallback(mCallback);
+        mediaController.registerCallback(mControllerCallback);
         PlaybackStateCompat state = mediaController.getPlaybackState();
         updatePlaybackState(state);
         MediaMetadataCompat metadata = mediaController.getMetadata();
@@ -252,6 +268,16 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                 transportControls.skipToPrevious();
                 break;
         }
+    }
+
+    @Override
+    public MediaBrowserCompat getMediaBrowser() {
+        return mMediaBrowser;
+    }
+
+    @Override
+    public void onMediaItemSelected(MediaBrowserCompat.MediaItem playigMusic) {
+
     }
 
     /**
