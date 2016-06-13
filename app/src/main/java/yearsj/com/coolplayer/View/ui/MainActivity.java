@@ -1,57 +1,69 @@
 package yearsj.com.coolplayer.View.ui;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import yearsj.com.coolplayer.View.model.MediaFragmentListener;
+import yearsj.com.coolplayer.View.service.MusicService;
 import yearsj.com.coolplayer.View.ui.fragment.AlbumListFragment;
+import yearsj.com.coolplayer.View.ui.fragment.ItemFragment;
+import yearsj.com.coolplayer.View.ui.fragment.MainFragment;
 import yearsj.com.coolplayer.View.ui.fragment.PlayingFragment;
 import yearsj.com.coolplayer.View.ui.fragment.SingerListFragment;
 import yearsj.com.coolplayer.View.ui.fragment.SongsListFragment;
+import yearsj.com.coolplayer.View.util.LogHelper;
+import yearsj.com.coolplayer.View.util.MediaIDHelper;
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends ExtendBaseActivity implements MediaFragmentListener{
 	/**弹出菜单*/
 	private PopupMenu popupMenu;
 	/**菜单*/
 	private Menu menu;
+	private TextView mainTitile;
 
-	ViewPager pager;
-	SingerListFragment singerListFragment;
-	SongsListFragment songsListFragment;
-	AlbumListFragment albumListFragment;
-	ArrayList<Fragment> fragmentsContainter;
-	//标题列表
-	ArrayList<String>   titleContainer    = new ArrayList<String>();
+	private ItemFragment itemFragment;
+	private MainFragment mainFragment;
 
-	private TabLayout mTabLayout;
+
+	private static final String TAG = LogHelper.makeLogTag(MainActivity.class.getSimpleName());
+	private static final String FRAGMENT_TAG = "mp_list_container";
+	private static final String SAVED_MEDIA_ID="yearsj.com.coolplayer.View.MEDIA_ID";
 
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
+	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		inite();
+	//	initializeFromParams(savedInstanceState,getIntent());
 	}
 
 	void inite(){
+		mainTitile= (TextView) this.findViewById(R.id.mainTitile);
 		initialMenu();
-		initialViewPager();
 	}
 
 	/**
@@ -98,36 +110,6 @@ public class MainActivity extends FragmentActivity{
 		popupMenu.show();
 	}
 
-
-	void initialViewPager(){
-		pager = (ViewPager) this.findViewById((R.id.viewpager));
-		singerListFragment=new SingerListFragment();
-		songsListFragment=new SongsListFragment();
-		albumListFragment=new AlbumListFragment();
-		fragmentsContainter = new ArrayList<Fragment>();
-		fragmentsContainter.add(songsListFragment);
-		fragmentsContainter.add(singerListFragment);
-		fragmentsContainter.add(albumListFragment);
-
-		mTabLayout = (TabLayout) findViewById(R.id.tabs);
-
-		//添加标签
-		titleContainer.add(this.getResources().getString(R.string.songs));
-		titleContainer.add(this.getResources().getString(R.string.singer));
-		titleContainer.add(this.getResources().getString(R.string.album));
-
-		mTabLayout.setTabMode(TabLayout.MODE_FIXED);//设置tab模式，当前为系统默认模式
-		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(0)));//添加tab选项卡
-		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(1)));
-		mTabLayout.addTab(mTabLayout.newTab().setText(titleContainer.get(2)));
-
-		MyViewPager myViewPager=new MyViewPager(getSupportFragmentManager(),fragmentsContainter,titleContainer);
-		pager.setAdapter(myViewPager);
-		mTabLayout.setupWithViewPager(pager);//将TabLayout和ViewPager关联起来
-		mTabLayout.setTabsFromPagerAdapter(myViewPager);
-	}
-
-
 	public void showPlayInfo(View v){
 		Intent intent = new Intent();
 		intent.setClass(MainActivity.this, PlayActivity.class);
@@ -135,32 +117,85 @@ public class MainActivity extends FragmentActivity{
 		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
 	}
 
-	class MyViewPager extends FragmentPagerAdapter{
-		private List<Fragment> mViewList;
-		private List<String>  titleContainer;
-
-		public MyViewPager(FragmentManager fm,List<Fragment> mViewList,List<String>  titleContainer){
-			super(fm);
-			this.mViewList=mViewList;
-			this.titleContainer=titleContainer;
+	/**
+	 * 选中某个音乐播放
+	 * @param item
+     */
+	@Override
+	public void onMediaItemSelected(MediaBrowserCompat.MediaItem item) {
+		LogHelper.d(TAG, "onMediaItemSelected, mediaId=" + item.getMediaId());
+		if (item.isPlayable()) {
+			getSupportMediaController().getTransportControls()
+					.playFromMediaId(item.getMediaId(), null);
+		} else if (item.isBrowsable()) {
+			navigateToBrowser(item.getMediaId(), true);
+		} else {
+			LogHelper.w(TAG, "Ignoring MediaItem that is neither browsable nor playable: ",
+					"mediaId=", item.getMediaId());
 		}
-
-		//viewpager中的组件数量
-		@Override
-		public int getCount() {
-			return mViewList.size();
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			// TODO Auto-generated method stub
-		return titleContainer.get(position);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return mViewList.get(position);
-		}
-
 	}
+
+	/**
+	 * 设置主标题
+	 * @param title
+     */
+	@Override
+	public void setMainTitle(CharSequence title) {
+		LogHelper.d(TAG, "Setting toolbar title to ", title);
+		if(itemFragment==null)
+			itemFragment=new ItemFragment();
+		itemFragment.changeTitle(title);
+	}
+
+
+	/**
+	 *
+	 * @param mediaId
+     */
+	@Override
+	public void setNavigationItem(String mediaId) {
+		LogHelper.d(TAG, "Setting navigation view mediaId to ", mediaId);
+		if (mediaId != null) {
+			if(mainFragment==null)
+				mainFragment=new MainFragment();
+			mainFragment.setNavigationItem(mediaId);
+		}
+	}
+
+
+
+	public void navigateToBrowser(String mediaId, boolean addToBackstack) {
+		ItemFragment fragment = getBrowseFragment();
+
+		if (fragment == null || !TextUtils.equals(fragment.getMediaId(), mediaId)) {
+			fragment = new ItemFragment();
+			fragment.setMediaId(mediaId);
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.setCustomAnimations(
+					R.animator.slide_in_right, R.animator.slide_out_left,
+					R.animator.slide_in_left, R.animator.slide_out_right);
+			transaction.replace(R.id.startViewCon, fragment, FRAGMENT_TAG);
+			if (addToBackstack) {
+				transaction.addToBackStack(null);
+			}
+			transaction.commit();
+		}
+	}
+
+	private ItemFragment getBrowseFragment() {
+		return (ItemFragment) getFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+	}
+
+	private void initializeFromParams(Bundle savedInstanceState, Intent intent) {
+		String mediaId = null;
+		if (savedInstanceState != null) {
+			// If there is a saved media ID, use it
+			mediaId = savedInstanceState.getString(SAVED_MEDIA_ID);
+		} else if (intent.hasExtra(SAVED_MEDIA_ID)) {
+			mediaId = intent.getExtras().getString(SAVED_MEDIA_ID);
+		}
+		navigateToBrowser(mediaId, false);
+		setNavigationItem(mediaId);
+	}
+
 }

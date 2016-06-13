@@ -3,6 +3,7 @@ package yearsj.com.coolplayer.View.ui.fragment;
 import  android.support.v4.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.media.MediaBrowserCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import yearsj.com.coolplayer.View.ui.R;
+import yearsj.com.coolplayer.View.util.MediaIDHelper;
 
 /**
  * Created by bing on 2016/6/2.
@@ -144,5 +146,22 @@ public class SingerListFragment extends Fragment {
         });
 
     }
+
+//    private void updateTitle() {
+//        if (MediaIDHelper.MEDIA_ID_ROOT.equals(mMediaId) &&
+//                MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM.equals(mMediaId)) {
+//            mMediaFragmentListener.setMainTitle(null);
+//            return;
+//        }
+//
+//        MediaBrowserCompat mediaBrowser = mMediaFragmentListener.getMediaBrowser();
+//        mediaBrowser.getItem(mMediaId, new MediaBrowserCompat.ItemCallback() {
+//            @Override
+//            public void onItemLoaded(MediaBrowserCompat.MediaItem item) {
+//                mMediaFragmentListener.setMainTitle(
+//                        item.getDescription().getTitle());
+//            }
+//        });
+//    }
 }
 

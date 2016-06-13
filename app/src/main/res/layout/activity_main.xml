@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
 
 <RelativeLayout
+    android:id="@+id/startViewCon"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     >
@@ -44,40 +44,23 @@
         android:background="@color/menuLine" >
     </View>
 
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        android:layout_below="@id/divide"
+    <fragment
+        android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:tabIndicatorColor="@color/theme"
-        app:tabSelectedTextColor="@color/theme"
-        app:tabTextColor="@color/black"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_below="@id/tabs"
-        android:background="@color/mainBackground"
-        android:layout_width="fill_parent"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30pt">
-    </android.support.v4.view.ViewPager>
+        android:layout_below="@id/divide"
+        android:name="yearsj.com.coolplayer.View.ui.fragment.MainFragment"
+        />
 </RelativeLayout>
 
 
-    <LinearLayout
-        android:layout_gravity="bottom"
-        android:gravity="bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
         <fragment
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
             android:id="@+id/id_fragment_playing"
             android:name="yearsj.com.coolplayer.View.ui.fragment.PlayingFragment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             />
-    </LinearLayout>
 
 </FrameLayout>
