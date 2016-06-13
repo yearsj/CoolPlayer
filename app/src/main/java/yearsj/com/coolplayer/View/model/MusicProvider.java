@@ -31,6 +31,7 @@ public class MusicProvider {
 
     // Categorized caches for music track data:
     private ConcurrentMap<String, List<MediaMetadataCompat>> mMusicListByAlbum;
+    private ConcurrentMap<String, List<MediaMetadataCompat>> mMusicListBySinger;
     private List<MediaMetadataCompat> mAllMusicList;
     private final ConcurrentMap<String, MutableMediaMetadata> mMusicListById;
 
@@ -50,6 +51,7 @@ public class MusicProvider {
     public MusicProvider(MusicProviderSource source) {
         mSource = source;
         mMusicListByAlbum = new ConcurrentHashMap<>();
+        mMusicListBySinger = new ConcurrentHashMap<>();
         mMusicListById = new ConcurrentHashMap<>();
         mAllMusicList = new ArrayList<>();
 
@@ -67,6 +69,18 @@ public class MusicProvider {
         return mMusicListByAlbum.keySet();
     }
 
+    /**
+     * Get an iterator over the list of albums
+     *
+     * @return genres
+     */
+    public Iterable<String> getSingers() {
+        if (mCurrentState != State.INITIALIZED) {
+            return Collections.emptyList();
+        }
+        return mMusicListBySinger.keySet();
+    }
+
 
     /**
      * Get music tracks of the given album
@@ -77,6 +91,17 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         return mMusicListByAlbum.get(album);
+    }
+
+    /**
+     * Get music tracks of the given album
+     *
+     */
+    public Iterable<MediaMetadataCompat> getMusicsBySinger(String singer) {
+        if (mCurrentState != State.INITIALIZED || !mMusicListByAlbum.containsKey(singer)) {
+            return Collections.emptyList();
+        }
+        return mMusicListBySinger.get(singer);
     }
 
     /**
@@ -179,6 +204,22 @@ public class MusicProvider {
         mMusicListByAlbum = newMusicListByAlbum;
     }
 
+    //歌手分类
+    private synchronized void buildListsBySinger() {
+        ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListBySinger = new ConcurrentHashMap<>();
+
+        for (MutableMediaMetadata m : mMusicListById.values()) {
+            String singer = m.metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+            List<MediaMetadataCompat> list = newMusicListBySinger.get(singer);
+            if (list == null) {
+                list = new ArrayList<>();
+                newMusicListBySinger.put(singer, list);
+            }
+            list.add(m.metadata);
+        }
+        mMusicListBySinger = newMusicListBySinger;
+    }
+
     //重新读取音乐资源
     private synchronized void retrieveMedia() {
         try {
@@ -194,6 +235,7 @@ public class MusicProvider {
 
                 buildAllMusicLists();
                 buildListsByAlbum();
+                buildListsBySinger();
                 mCurrentState = State.INITIALIZED;
             }
         } finally {
@@ -223,7 +265,13 @@ public class MusicProvider {
         //获得所有的专辑列表
         else if (MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM.equals(mediaId)) {
             for (String album : getAlbums()) {
-                mediaItems.add(createBrowsableMediaItemForGenre(album, resources));
+                mediaItems.add(createBrowsableMediaItemForGenre(album, resources,MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM));
+            }
+        }
+        //获得所有的歌手列表
+        else if (MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER.equals(mediaId)) {
+            for (String singer : getSingers()) {
+                mediaItems.add(createBrowsableMediaItemForGenre(singer, resources,MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER));
             }
         }
         //获得某一专辑的所有歌曲
@@ -233,7 +281,15 @@ public class MusicProvider {
                 mediaItems.add(createMediaItem(metadata,MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM));
             }
 
-        } else {
+        }
+        //获得某一歌手的所有歌曲
+        else if (mediaId.startsWith(MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER)) {
+            String singer = MediaIDHelper.getHierarchy(mediaId)[1];
+            for (MediaMetadataCompat metadata : getMusicsBySinger(singer)) {
+                mediaItems.add(createMediaItem(metadata,MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER));
+            }
+
+        }else {
             Log.v(TAG, "Skipping unmatched mediaId: " + mediaId);
         }
         return mediaItems;
@@ -253,16 +309,29 @@ public class MusicProvider {
     }
 
     //按照分类创建分类项目列表
-    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForGenre(String album,
-                                                                          Resources resources) {
-        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(MediaIDHelper.createMediaID(null, MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, album))
-                .setTitle(album)
-                .setSubtitle(resources.getString(
-                        R.string.browse_musics_by_album_subtitle, album))
-                .build();
-        return new MediaBrowserCompat.MediaItem(description,
-                MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+    private MediaBrowserCompat.MediaItem createBrowsableMediaItemForGenre(String value,Resources resources,String type) {
+        //专辑
+        if(type == MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM){
+            MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIDHelper.createMediaID(null, MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, value))
+                    .setTitle(value)
+                    .setSubtitle(resources.getString(
+                            R.string.browse_musics_by_album_subtitle, value))
+                    .build();
+            return new MediaBrowserCompat.MediaItem(description,
+                    MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+        }
+        else{
+            MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
+                    .setMediaId(MediaIDHelper.createMediaID(null, MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER, value))
+                    .setTitle(value)
+                    .setSubtitle(resources.getString(
+                            R.string.browse_musics_by_singer_subtitle, value))
+                    .build();
+            return new MediaBrowserCompat.MediaItem(description,
+                    MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
+        }
+
     }
 
     //按照分类后的项目创建可播放的音乐资源列表
@@ -279,6 +348,11 @@ public class MusicProvider {
                     String album = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
                     hierarchyAwareMediaID = MediaIDHelper.createMediaID(
                             metadata.getDescription().getMediaId(), MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM, album);
+                    break;
+                case MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER:
+                    String singer = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+                    hierarchyAwareMediaID = MediaIDHelper.createMediaID(
+                            metadata.getDescription().getMediaId(), MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER, singer);
                     break;
                 default:
                     hierarchyAwareMediaID = MediaIDHelper.createMediaID(

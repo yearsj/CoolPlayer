@@ -6,7 +6,8 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:src="@drawable/test"
+        android:id="@+id/full_background"
+        android:src="@drawable/background"
         android:scaleType="centerCrop"
         android:foreground="@color/trans" />
 
@@ -75,7 +76,7 @@
             <ImageView
                 android:clickable="true"
                 style="@style/picStyle"
-                android:id="@+id/play"
+                android:id="@+id/play_tatus"
                 android:src="@drawable/play"
                 android:layout_marginLeft="10pt"
                 android:layout_weight="1"/>

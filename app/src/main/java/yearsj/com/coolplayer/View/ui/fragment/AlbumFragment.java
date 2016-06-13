@@ -1,12 +1,13 @@
 package yearsj.com.coolplayer.View.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import yearsj.com.coolplayer.View.ui.R;
 
@@ -19,11 +20,22 @@ public class AlbumFragment extends BaseFragment {
     //是否已被加载过一次，第二次就不再去请求数据了
     private boolean mHasLoadedOnce;
 
+    private ImageView albumCover;
+
     private View view = null;
+
+    public static final AlbumFragment newInstance(Bitmap bitmap){
+        AlbumFragment albumFragment = new AlbumFragment();
+        Bundle bd = new Bundle();
+        bd.putParcelable("album",bitmap);
+        albumFragment.setArguments(bd);
+        return albumFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_album_cover, container, false);
+        albumCover = (ImageView)view.findViewById(R.id.albumcover);
         isPrepared = true;
         lazyLoad();
         return view;
@@ -31,7 +43,10 @@ public class AlbumFragment extends BaseFragment {
 
     //刷新界面
     private void refreshData() {
-        Toast.makeText(this.getContext(), "DailyFragment", Toast.LENGTH_LONG).show();
+        Bitmap album = getArguments().getParcelable("album");
+        if(null!=album){
+            albumCover.setImageBitmap(album);
+        }
     }
 
     @Override

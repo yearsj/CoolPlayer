@@ -42,6 +42,7 @@
     <string name="browse_albums">专辑列表</string>
     <string name="browse_album_subtitle">专辑歌曲</string>
     <string name="browse_musics_by_album_subtitle">%1$s 歌曲</string>
+    <string name="browse_musics_by_singer_subtitle">%1$s 歌曲</string>
 
 
 
