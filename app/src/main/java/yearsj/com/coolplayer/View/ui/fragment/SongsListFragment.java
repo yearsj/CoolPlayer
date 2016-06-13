@@ -1,8 +1,8 @@
 package yearsj.com.coolplayer.View.ui.fragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import  android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.MediaBrowserCompat;
@@ -36,7 +36,13 @@ import yearsj.com.coolplayer.View.util.PinyinComparator;
 /**
  * Created by bing on 2016/6/2.
  */
-public class SongsListFragment extends Fragment {
+public class SongsListFragment extends BaseFragment {
+
+    //标志位，标志已经初始化完成
+    private boolean isPrepared;
+    //是否已被加载过一次，第二次就不再去请求数据了
+    private boolean mHasLoadedOnce;
+
     /**
      * 事件列表
      **/
@@ -176,7 +182,7 @@ public class SongsListFragment extends Fragment {
             p.removeAllViewsInLayout();
             Log.v("yearsj", "fragment1-->移除已存在的View");
         }
-
+        isPrepared = true;
         return view;
     }
 
@@ -199,8 +205,8 @@ public class SongsListFragment extends Fragment {
             @Override
             public void onTouchingLetterChanged(String s) {
                 final int position = adapter.getPositionForSection(s.charAt(0));
-                System.out.println("position================"+position);
-                Log.i("position",position+"");
+                System.out.println("position================" + position);
+                Log.i("position", position + "");
                 if (position != -1) {
                     list.setSelection(position);
                     list.smoothScrollToPositionFromTop(position, 0, 500);//滑动到position  距离top的偏移量  滑动所用的时间
@@ -245,11 +251,9 @@ public class SongsListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO 自动生成的方法存根
-                MediaBrowserCompat.MediaItem playingMusic=songs.get(position);
+                MediaBrowserCompat.MediaItem playingMusic = songs.get(position);
                 mediaBrowserProvider.onMediaItemSelected(playingMusic);
-
             }
-
         });
 
     }
@@ -297,17 +301,7 @@ public class SongsListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        // fetch browsing information to fill the listview:
-        MediaBrowserCompat mediaBrowser = mediaBrowserProvider.getMediaBrowser();
-
-        LogHelper.v(TAG, "fragment.onStart, mediaId=" + mMediaId +
-                "  onConnected=" + mediaBrowser.isConnected());
-
-        if (mediaBrowser.isConnected()) {
-            onConnected();
-        }
-
+        lazyLoad();
     }
 
     @Override
@@ -324,6 +318,17 @@ public class SongsListFragment extends Fragment {
         }
     }
 
+    private void connect(){
+        // fetch browsing information to fill the listview:
+        MediaBrowserCompat mediaBrowser = mediaBrowserProvider.getMediaBrowser();
+
+        LogHelper.v(TAG, "fragment.onStart, mediaId=" + mMediaId +
+                "  onConnected=" + mediaBrowser.isConnected());
+
+        if (mediaBrowser.isConnected()) {
+            onConnected();
+        }
+    }
 
     public void onConnected() {
         if (isDetached()) {
@@ -344,6 +349,45 @@ public class SongsListFragment extends Fragment {
     }
 
 
+    @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
 
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //显示加载进度对话框
+                System.out.println("正在加载...");
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccess) {
+                if (isSuccess) {
+                    // 加载成功
+                    connect();
+                    mHasLoadedOnce = true;
+                } else {
+                    // 加载失败
+                    Log.i("DailyFragment", "加载失败");
+                }
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }.execute();
+    }
 }
 

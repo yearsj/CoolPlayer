@@ -51,6 +51,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     private TextView author;
     private ImageView background;
     private ImageView playStatus;
+    private ImageView next;
+    private ImageView pre;
     private SeekBar processSeekBar;
 
     private Bitmap albumCover;
@@ -103,7 +105,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         fragments.add(AlbumFragment.newInstance(albumCover));
         fragments.add(new PlayListFragment());
         mViewPager.setAdapter(new MyFragmentAdapter(this.getSupportFragmentManager(), fragments));
-        mViewPager.setCurrentItem(0);
+        changeDot(0);
     }
 
     private void initView(){
@@ -117,6 +119,11 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         author=(TextView)findViewById(R.id.author_paly);
         background = (ImageView)findViewById(R.id.full_background);
         playStatus = (ImageView)findViewById(R.id.play_tatus);
+        playStatus.setOnClickListener(this);
+        next  = (ImageView)findViewById(R.id.next_play);
+        next.setOnClickListener(this);
+        pre  = (ImageView)findViewById(R.id.pre_play);
+        pre.setOnClickListener(this);
         processSeekBar = (SeekBar)findViewById(R.id.process);
     }
 

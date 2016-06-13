@@ -1,6 +1,7 @@
 package yearsj.com.coolplayer.View.ui.fragment;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import  android.support.v4.app.Fragment;
 import android.graphics.drawable.Drawable;
@@ -31,7 +32,12 @@ import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.LogHelper;
 
-public class BrowerFragment extends Fragment {
+public class BrowerFragment extends BaseFragment {
+    //标志位，标志已经初始化完成
+    private boolean isPrepared;
+    //是否已被加载过一次，第二次就不再去请求数据了
+    private boolean mHasLoadedOnce;
+
     private Drawable poster;
     /**
      * 事件列表
@@ -124,6 +130,7 @@ public class BrowerFragment extends Fragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         this.inflater = inflater;
         view = inflater.inflate(R.layout.fragment_album, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+        isPrepared = true;
         initial();
     }
 
@@ -159,7 +166,10 @@ public class BrowerFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        lazyLoad();
+    }
 
+    private void connect(){
         // fetch browsing information to fill the listview:
         MediaBrowserCompat mediaBrowser = mediaBrowserProvider.getMediaBrowser();
 
@@ -169,9 +179,7 @@ public class BrowerFragment extends Fragment {
         if (mediaBrowser.isConnected()) {
             onConnected();
         }
-
     }
-
 
     @Override
     public void onStop() {
@@ -253,7 +261,7 @@ public class BrowerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO 自动生成的方法存根
-                MediaBrowserCompat.MediaItem browerItem=browers.get(position);
+                MediaBrowserCompat.MediaItem browerItem = browers.get(position);
                 mediaBrowserProvider.onMediaItemSelected(browerItem);
             }
 
@@ -280,4 +288,44 @@ public class BrowerFragment extends Fragment {
         }
     }
 
+    @Override
+    protected void lazyLoad() {
+        if (!isPrepared || !isVisible || mHasLoadedOnce) {
+            return;
+        }
+
+        new AsyncTask<Void, Void, Boolean>() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //显示加载进度对话框
+                System.out.println("正在加载...");
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccess) {
+                if (isSuccess) {
+                    // 加载成功
+                    connect();
+                    mHasLoadedOnce = true;
+                } else {
+                    // 加载失败
+                    Log.i("DailyFragment", "加载失败");
+                }
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }.execute();
+    }
 }

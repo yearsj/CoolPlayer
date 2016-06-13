@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import yearsj.com.coolplayer.View.ui.R;
@@ -26,7 +29,6 @@ public class PlayListAdapter extends ArrayAdapter<MediaSessionCompat.QueueItem> 
         ImageView play_status;
         TextView title;
         TextView author;
-        TextView album;
     }
 
     private Context context;
@@ -59,13 +61,15 @@ public class PlayListAdapter extends ArrayAdapter<MediaSessionCompat.QueueItem> 
 
         MediaSessionCompat.QueueItem item = getItem(position);
         holder.title.setText(item.getDescription().getTitle());
-        holder.author.setText(item.getDescription().getDescription());
+        holder.author.setText(item.getDescription().getSubtitle());
 
         //如果当前为正在播放的曲目
         if (mActiveQueueItemId == item.getQueueId()){
-            holder.play_status.setImageDrawable(context.getDrawable(R.drawable.playing));
+            //holder.play_status.setImageDrawable(context.getDrawable(R.drawable.playing));
+            holder.play_status.setImageResource(R.drawable.playing);
         } else{
-            holder.play_status.setImageDrawable(context.getDrawable(R.drawable.play2));
+            //holder.play_status.setImageDrawable(context.getDrawable(R.drawable.play2));
+            holder.play_status.setImageResource(R.drawable.play2);
         }
         return convertView;
     }

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="50dp"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp">
 
     <ImageView
         android:id="@+id/play_status_list"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/playing"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"/>
 
     <TextView
@@ -17,10 +16,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/title_play_list"
         android:text="好久不见"
-        android:textSize="25sp"
+        android:textSize="15sp"
         android:textColor="@color/textColor"
         android:layout_toRightOf="@id/play_status_list"
         android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/temp_line"
+        android:text="--"
+        android:textSize="15sp"
+        android:textColor="@color/textColor"
+        android:layout_toRightOf="@id/title_play_list"
         android:layout_centerVertical="true"/>
 
     <TextView
@@ -30,26 +39,6 @@
         android:text="陈奕迅"
         android:textSize="15sp"
         android:textColor="@color/textColor"
-        android:layout_below="@id/title_play_list"
-        android:layout_alignLeft="@id/title_play_list"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:id="@+id/temp_list"
-        android:text="|"
-        android:textSize="15sp"
-        android:textColor="@color/textColor"
-        android:layout_toRightOf="@id/author_play_list"
-        android:layout_below="@id/title_play_list"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/album_play_list"
-        android:text="认了吧"
-        android:textSize="15sp"
-        android:textColor="@color/textColor"
-        android:layout_below="@id/title_play_list"
-        android:layout_toRightOf="@id/temp_list"/>
+        android:layout_toRightOf="@id/temp_line"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>

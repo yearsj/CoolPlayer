@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 		playingFragment = (PlayingFragment) getFragmentManager()
 				.findFragmentById(R.id.id_fragment_playing);
-	//	initializeFromParams(savedInstanceState,getIntent());
 	}
 
 	@Override
@@ -176,19 +175,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		}
 	}
 
-
-	/**
-	 *
-     */
-//	public void setNavigationItem(String mediaId) {
-//		LogHelper.d(TAG, "Setting navigation view mediaId to ", mediaId);
-//		if (mediaId != null) {
-//			if(mainFragment==null)
-//				mainFragment=new MainFragment();
-//			mainFragment.setNavigationItem(mediaId);
-//		}
-//	}
-
 	protected void showPlaybackControls() {
 		LogHelper.d(TAG, "showPlaybackControls");
 
@@ -198,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
 	}
 
-
 	protected void hidePlaybackControls() {
 		LogHelper.d(TAG, "hidePlaybackControls");
 		getFragmentManager().beginTransaction()
@@ -206,8 +191,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 				.commit();
 		overridePendingTransition(R.anim.slide_bottom_to_up, R.anim.just_stay);
 	}
-
-
 
 	public void navigateToBrowser(String mediaId) {
 		itemFragment = ItemFragment.newInstance(mediaId);
@@ -229,18 +212,6 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}
-
-//	private void initializeFromParams(Bundle savedInstanceState, Intent intent) {
-//		String mediaId = null;
-//		if (savedInstanceState != null) {
-//			// If there is a saved media ID, use it
-//			mediaId = savedInstanceState.getString(SAVED_MEDIA_ID);
-//		} else if (intent.hasExtra(SAVED_MEDIA_ID)) {
-//			mediaId = intent.getExtras().getString(SAVED_MEDIA_ID);
-//		}
-//		navigateToBrowser(mediaId, false);
-//		setNavigationItem(mediaId);
-//	}
 
 	@Override
 	public MediaBrowserCompat getMediaBrowser() {
