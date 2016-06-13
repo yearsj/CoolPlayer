@@ -3,7 +3,6 @@ package yearsj.com.coolplayer.View.ui.fragment;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import  android.support.v4.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.MediaBrowserCompat;
@@ -32,7 +31,6 @@ import java.util.Set;
 
 import yearsj.com.coolplayer.View.adapter.SortAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
-import yearsj.com.coolplayer.View.model.MediaFragmentListener;
 import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
@@ -210,10 +208,6 @@ public class SongsListFragment extends Fragment {
                 System.out.println("position================"+position);
                 Log.i("position",position+"");
                 if (position != -1) {
-//                    list.requestFocus();
-//                    list.setItemChecked(position, true);
-//                    list.setSelectionFromTop(position,oneListHight);
-//                    list.smoothScrollToPosition(position);
                     list.setSelection(position);
                     list.smoothScrollToPositionFromTop(position, 0, 500);//滑动到position  距离top的偏移量  滑动所用的时间
                     adapter.notifyDataSetInvalidated();
@@ -342,9 +336,6 @@ public class SongsListFragment extends Fragment {
             return;
         }
 
-        if (mMediaId == null) {
-            mMediaId = mediaBrowserProvider.getMediaBrowser().getRoot();
-        }
       //  updateTitle();
         mediaBrowserProvider.getMediaBrowser().unsubscribe(mMediaId);
 

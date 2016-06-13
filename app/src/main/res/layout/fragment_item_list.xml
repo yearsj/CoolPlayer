@@ -3,7 +3,6 @@
 <ScrollView
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fadingEdge = "none"
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <LinearLayout
@@ -23,20 +22,19 @@
                 android:id="@+id/mainTitile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/menu"
+                android:layout_toRightOf="@+id/back"
                 android:layout_centerVertical="true"
                 android:text="@string/findMusic"
                 android:textColor="@color/white"
                 android:layout_marginLeft="5pt"
-                android:textSize="11pt"
+                android:textSize="10pt"
                 android:textStyle="bold" />
 
             <ImageView
                 style="@style/picButtonStyle"
-                android:id="@id/menu"
+                android:id="@id/back"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5pt"
-                android:onClick="back"
                 android:src="@drawable/arrow_left_white" />
         </RelativeLayout>
 
@@ -47,12 +45,18 @@
             android:background="@color/tableLine"
             />
 
-<ListView
+    <ListView
     android:id="@+id/musicListView"
     android:layout_width="match_parent"
     android:background="@color/white"
     android:dividerHeight="1sp"
     android:layout_height="wrap_content" >
-</ListView>
+    </ListView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1sp"
+            android:background="@color/tableLine"
+            />
 </LinearLayout>
 </ScrollView>

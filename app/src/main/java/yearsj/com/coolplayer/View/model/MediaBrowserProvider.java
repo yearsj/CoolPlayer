@@ -6,5 +6,4 @@ public interface MediaBrowserProvider {
     MediaBrowserCompat getMediaBrowser();
 
     void onMediaItemSelected(MediaBrowserCompat.MediaItem playigMusic);
-
 }

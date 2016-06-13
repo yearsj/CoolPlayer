@@ -24,6 +24,7 @@ public class MusicItemAdapter extends ArrayAdapter<MusicItem>{
         this.mResourceId=resource;
     }
 
+
     public View getView(int position, View convertView, ViewGroup parent) {
         MusicItem musicItem = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(context);

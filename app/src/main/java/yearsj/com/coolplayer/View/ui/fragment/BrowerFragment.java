@@ -44,6 +44,8 @@ public class BrowerFragment extends Fragment {
     private MediaBrowserProvider mediaBrowserProvider;
     private static final String TAG = LogHelper.makeLogTag(BrowerFragment.class.getSimpleName());
 
+    List<MediaBrowserCompat.MediaItem> browers;
+
     final String POSTER = "poster";
     final String TITLE = "title";
     final String INFO = "info";
@@ -88,7 +90,7 @@ public class BrowerFragment extends Fragment {
                         LogHelper.d(TAG, "fragment onChildrenLoaded, parentId=" + parentId +
                                 "  count=" + children.size());
                         adapter.clear();
-
+                        browers=children;
                         for (MediaBrowserCompat.MediaItem item : children) {
                             Map<String,Object> map=new HashMap<String, Object>();
                             String title=item.getDescription().getTitle().toString();
@@ -251,7 +253,8 @@ public class BrowerFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO 自动生成的方法存根
-
+                MediaBrowserCompat.MediaItem browerItem=browers.get(position);
+                mediaBrowserProvider.onMediaItemSelected(browerItem);
             }
 
         });

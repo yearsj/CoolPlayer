@@ -57,6 +57,12 @@
             android:layout_height="wrap_content" >
         </ListView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1sp"
+                android:background="@color/tableLine"
+                />
+
         </LinearLayout>
     </ScrollView>
 
