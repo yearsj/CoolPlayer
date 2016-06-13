@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.session.MediaSession;
 import android.os.Build;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import yearsj.com.coolplayer.View.ui.R;
 /**
  * Created by yearsj on 2016/6/5.
  */
-public class PlayListAdapter extends ArrayAdapter<MediaSession.QueueItem> {
+public class PlayListAdapter extends ArrayAdapter<MediaSessionCompat.QueueItem> {
 
     private long mActiveQueueItemId = MediaSession.QueueItem.UNKNOWN_ID;
     //自定义类
@@ -31,7 +32,7 @@ public class PlayListAdapter extends ArrayAdapter<MediaSession.QueueItem> {
     private Context context;
 
     public PlayListAdapter(Context context) {
-        super(context, R.layout.playlist, new ArrayList<MediaSession.QueueItem>());
+        super(context, R.layout.playlist, new ArrayList<MediaSessionCompat.QueueItem>());
         this.context = context;
     }
 
@@ -56,11 +57,11 @@ public class PlayListAdapter extends ArrayAdapter<MediaSession.QueueItem> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        MediaSession.QueueItem item = getItem(position);
+        MediaSessionCompat.QueueItem item = getItem(position);
         holder.title.setText(item.getDescription().getTitle());
         holder.author.setText(item.getDescription().getDescription());
 
-        // If the itemId matches the active Id then use a different icon
+        //如果当前为正在播放的曲目
         if (mActiveQueueItemId == item.getQueueId()){
             holder.play_status.setImageDrawable(context.getDrawable(R.drawable.playing));
         } else{

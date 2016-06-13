@@ -3,7 +3,6 @@ package yearsj.com.coolplayer.View.ui.fragment;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import  android.support.v4.app.Fragment;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.media.MediaBrowserCompat;
@@ -15,30 +14,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import yearsj.com.coolplayer.View.adapter.SortAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
-import yearsj.com.coolplayer.View.model.MediaFragmentListener;
 import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
 import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
-import yearsj.com.coolplayer.View.util.MediaIDHelper;
 import yearsj.com.coolplayer.View.util.PinyinComparator;
 
 /**
