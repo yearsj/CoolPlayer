@@ -35,6 +35,9 @@ public class QueueHelper {
             if (categoryType.equals(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM)) {
                 tracks = musicProvider.getMusicsByAlbum(categoryValue);
             }
+            else if(categoryType.equals(MediaIDHelper.MEDIA_ID_MUSICS_BY_SINGER)){
+                tracks = musicProvider.getMusicsBySinger(categoryValue);
+            }
 
             if (tracks == null) {
                 LogHelper.e(TAG, "Unrecognized mediaId type:  for media ", mediaId);

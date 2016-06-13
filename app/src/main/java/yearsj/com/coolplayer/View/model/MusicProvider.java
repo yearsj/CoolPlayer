@@ -98,7 +98,7 @@ public class MusicProvider {
      *
      */
     public Iterable<MediaMetadataCompat> getMusicsBySinger(String singer) {
-        if (mCurrentState != State.INITIALIZED || !mMusicListByAlbum.containsKey(singer)) {
+        if (mCurrentState != State.INITIALIZED || !mMusicListBySinger.containsKey(singer)) {
             return Collections.emptyList();
         }
         return mMusicListBySinger.get(singer);
