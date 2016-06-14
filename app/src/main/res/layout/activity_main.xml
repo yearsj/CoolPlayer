@@ -7,7 +7,8 @@
 
 <FrameLayout
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
     android:id="@+id/mainContent"
     />
 
@@ -15,6 +16,7 @@
         <fragment
             android:layout_gravity="bottom"
             android:gravity="bottom"
+            android:layout_weight="1"
             android:id="@+id/id_fragment_playing"
             android:name="yearsj.com.coolplayer.View.ui.fragment.PlayingFragment"
             android:layout_width="fill_parent"

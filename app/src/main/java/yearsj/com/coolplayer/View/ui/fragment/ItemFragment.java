@@ -10,18 +10,12 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +25,9 @@ import yearsj.com.coolplayer.View.model.MusicItem;
 import yearsj.com.coolplayer.View.ui.MainActivity;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.LogHelper;
-import yearsj.com.coolplayer.View.util.MediaIDHelper;
+import yearsj.com.coolplayer.View.util.StringHelper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A fragment representing a list of Items.
@@ -99,7 +89,7 @@ public class ItemFragment extends Fragment {
                             musicItemAdapter.add(musicItem);
                         }
                         musicItemAdapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(listView);
+                       // setListViewHeightBasedOnChildren(listView);
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
                     }
@@ -130,10 +120,7 @@ public class ItemFragment extends Fragment {
         setOnListListener();
 
         mMediaId=getArguments().getString("mediaId");
-        String title=mMediaId.substring(mMediaId.indexOf("/")+1);
-        if(title.length()>7)
-            title=title.substring(0,7)+"...";
-        changeTitle(title);
+        changeTitle(StringHelper.getFormatBrowerByLength(mMediaId,7));
 
         backImage= (ImageView)view.findViewById(R.id.back);
         backImage.setOnClickListener(new View.OnClickListener() {
@@ -172,29 +159,6 @@ public class ItemFragment extends Fragment {
             }
 
         });
-    }
-
-    /**
-     * 根据listView的数据个数动态的改变高度
-     * @param listView
-     */
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-        int totalHeight = 0;
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
     }
 
 

@@ -7,9 +7,17 @@ public class MusicItem {
     String title;
     String info;
 
+    int sourceId;
+
     public MusicItem(String title,String info){
         this.title=title;
         this.info=info;
+    }
+
+    public MusicItem(String title,String info,int sourceId){
+        this.title=title;
+        this.info=info;
+        this.sourceId=sourceId;
     }
 
     public String getTitle(){
@@ -18,5 +26,9 @@ public class MusicItem {
 
     public String getInfo(){
         return info;
+    }
+
+    public int getSourceId(){
+        return sourceId;
     }
 }

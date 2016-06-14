@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/deepdarkGrey"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<!--<ScrollView-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/deepdarkGrey"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--&gt;-->
 <LinearLayout
     android:id="@+id/fragment_play_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-
+    android:background="@color/deepdarkGrey"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
     <LinearLayout
@@ -58,4 +59,4 @@
         />
 
 </LinearLayout>
-</ScrollView>
+<!--</ScrollView>-->

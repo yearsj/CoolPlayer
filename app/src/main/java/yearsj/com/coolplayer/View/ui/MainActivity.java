@@ -18,13 +18,17 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,12 +50,12 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 	private MainFragment mainFragment;
 	private PlayingFragment playingFragment;
 	private MediaBrowserCompat mediaBrowserCompat;
-
-
+	private FrameLayout mainContentLayout;
 
 	private static final String TAG = LogHelper.makeLogTag(MainActivity.class.getSimpleName());
-	private static final String FRAGMENT_TAG = "mp_list_container";
-	private static final String SAVED_MEDIA_ID="yearsj.com.coolplayer.View.MEDIA_ID";
+	private int sideBarHight;
+	private final int addHight=200;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -64,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 		playingFragment = (PlayingFragment) getFragmentManager()
 				.findFragmentById(R.id.id_fragment_playing);
+
+		mainContentLayout= (FrameLayout)findViewById(R.id.mainContent);
+		sideBarHight=this.getWindowManager().getDefaultDisplay().getHeight()/3*2;
+
 	}
 
 	@Override
@@ -177,6 +185,12 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 	protected void showPlaybackControls() {
 		LogHelper.d(TAG, "showPlaybackControls");
+		ViewGroup.MarginLayoutParams margin=new ViewGroup.MarginLayoutParams(mainContentLayout.getLayoutParams());
+		margin.setMargins(0,0, margin.width, margin.height+addHight);
+		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(margin);
+		mainContentLayout.setLayoutParams(layoutParams);
+
+		SongsListFragment.setSideBarHight(sideBarHight);
 
 		getFragmentManager().beginTransaction()
 				.show(playingFragment)
@@ -186,6 +200,13 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 	protected void hidePlaybackControls() {
 		LogHelper.d(TAG, "hidePlaybackControls");
+		ViewGroup.MarginLayoutParams margin=new ViewGroup.MarginLayoutParams(mainContentLayout.getLayoutParams());
+		margin.setMargins(0,0, margin.width, margin.height-addHight);
+		FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(margin);
+		mainContentLayout.setLayoutParams(layoutParams);
+
+		SongsListFragment.setSideBarHight(addHight+sideBarHight);
+
 		getFragmentManager().beginTransaction()
 				.hide(playingFragment)
 				.commit();

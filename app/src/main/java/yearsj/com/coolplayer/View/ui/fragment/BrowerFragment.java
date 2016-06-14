@@ -3,7 +3,6 @@ package yearsj.com.coolplayer.View.ui.fragment;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import  android.support.v4.app.Fragment;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,19 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import yearsj.com.coolplayer.View.adapter.BrowerAdapter;
+import yearsj.com.coolplayer.View.adapter.MusicItemAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
+import yearsj.com.coolplayer.View.model.MusicItem;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.LogHelper;
 
@@ -55,7 +49,7 @@ public class BrowerFragment extends BaseFragment {
     final String POSTER = "poster";
     final String TITLE = "title";
     final String INFO = "info";
-    BrowerAdapter adapter;
+    MusicItemAdapter adapter;
 
     private final MediaControllerCompat.Callback mMediaControllerCallback = new MediaControllerCompat.Callback() {
         @Override
@@ -98,16 +92,13 @@ public class BrowerFragment extends BaseFragment {
                         adapter.clear();
                         browers=children;
                         for (MediaBrowserCompat.MediaItem item : children) {
-                            Map<String,Object> map=new HashMap<String, Object>();
                             String title=item.getDescription().getTitle().toString();
                             String info=item.getDescription().getSubtitle().toString();
-                            map.put(POSTER,getResources().getDrawable(R.drawable.poster));
-                            map.put(TITLE, title);
-                            map.put(INFO, info);
-                            adapter.add(map);
+
+                            MusicItem musicItem=new MusicItem(title,info,R.mipmap.ic_launcher);
+                            adapter.add(musicItem);
                         }
                         adapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(list);
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
                     }
@@ -129,7 +120,7 @@ public class BrowerFragment extends BaseFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
         this.inflater = inflater;
-        view = inflater.inflate(R.layout.fragment_album, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
+        view = inflater.inflate(R.layout.fragment_brower, (ViewGroup)getActivity().findViewById(R.id.viewpager), false);
         isPrepared = true;
         initial();
     }
@@ -152,8 +143,6 @@ public class BrowerFragment extends BaseFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // If used on an activity that doesn't implement MediaFragmentListener, it
-        // will throw an exception as expected:
         mediaBrowserProvider = (MediaBrowserProvider) activity;
     }
 
@@ -196,23 +185,6 @@ public class BrowerFragment extends BaseFragment {
     }
 
 
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
-
     void initial() {
         list = (ListView) view.findViewById(R.id.albumListView);
         loadData();
@@ -221,33 +193,8 @@ public class BrowerFragment extends BaseFragment {
     }
 
     void loadData() {
-        ArrayList<HashMap<String, Object>> mylist = new ArrayList<HashMap<String, Object>>();
-        adapter = new BrowerAdapter(view.getContext(),
-                mylist,
-                R.layout.two_item_with_img_list,
-
-
-                new String[]{POSTER, TITLE, INFO},
-
-
-                new int[]{R.id.poster, R.id.titleView, R.id.infoView});
-
-        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Object data,
-                                        String textRepresentation) {
-                if (view instanceof ImageView && data instanceof Drawable) {
-                    ImageView iv = (ImageView) view;
-                    iv.setImageDrawable((Drawable) data);
-                    return true;
-                }
-                return false;
-            }
-        });
-
+        adapter=new MusicItemAdapter(view.getContext(),R.layout.two_item_with_img_list);
         list.setAdapter(adapter);
-
-
     }
 
 
@@ -275,12 +222,10 @@ public class BrowerFragment extends BaseFragment {
         if (isDetached()) {
             return;
         }
-        //  updateTitle();
         mediaBrowserProvider.getMediaBrowser().unsubscribe(mMediaId);
 
         mediaBrowserProvider.getMediaBrowser().subscribe(mMediaId, mSubscriptionCallback);
 
-        // Add MediaController callback so we can redraw the list when metadata changes:
         MediaControllerCompat controller = ((FragmentActivity) getActivity())
                 .getSupportMediaController();
         if (controller != null) {
