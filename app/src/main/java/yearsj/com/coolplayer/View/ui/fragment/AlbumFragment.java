@@ -3,13 +3,16 @@ package yearsj.com.coolplayer.View.ui.fragment;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.media.MediaDescriptionCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import yearsj.com.coolplayer.View.model.MediaDescriptionInfo;
 import yearsj.com.coolplayer.View.ui.R;
 
 /**
@@ -22,31 +25,38 @@ public class AlbumFragment extends BaseFragment {
     private boolean mHasLoadedOnce;
 
     private ImageView albumCover;
-
     private View view = null;
-
-    public static final AlbumFragment newInstance(Bitmap bitmap){
-        AlbumFragment albumFragment = new AlbumFragment();
-        Bundle bd = new Bundle();
-        bd.putParcelable("album",bitmap);
-        albumFragment.setArguments(bd);
-        return albumFragment;
-    }
+    private TextView title;
+    private TextView author;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_album_cover, container, false);
         albumCover = (ImageView)view.findViewById(R.id.albumcover);
+        title = (TextView)view.findViewById(R.id.title_play);
+        author=(TextView)view.findViewById(R.id.author_paly);
         isPrepared = true;
-        lazyLoad();
+        mHasLoadedOnce = false;
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        lazyLoad();
     }
 
     //刷新界面
     private void refreshData() {
-        Bitmap album = getArguments().getParcelable("album");
+        MediaDescriptionInfo mediaDescriptionInfo = (MediaDescriptionInfo)getActivity();
+        Bitmap album = mediaDescriptionInfo.getCurrentMediaBitmap();
+        MediaDescriptionCompat descriptionCompat = mediaDescriptionInfo.getCurrentMediaDescription();
         if(null!=album){
             albumCover.setImageBitmap(album);
+        }
+        if(null!= descriptionCompat){
+            title.setText(descriptionCompat.getTitle());
+            author.setText("--"+descriptionCompat.getSubtitle()+"--");
         }
     }
 
@@ -79,13 +89,6 @@ public class AlbumFragment extends BaseFragment {
 
             @Override
             protected Boolean doInBackground(Void... params) {
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
                 return true;
             }
         }.execute();

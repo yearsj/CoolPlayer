@@ -4,9 +4,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.session.MediaController;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,48 +18,53 @@ import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import yearsj.com.coolplayer.View.adapter.MyFragmentAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
+import yearsj.com.coolplayer.View.model.MediaDescriptionInfo;
 import yearsj.com.coolplayer.View.service.MusicService;
 import yearsj.com.coolplayer.View.ui.fragment.AlbumFragment;
 import yearsj.com.coolplayer.View.ui.fragment.PlayListFragment;
 import yearsj.com.coolplayer.View.util.AlbumArtCache;
-import yearsj.com.coolplayer.View.util.LogHelper;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by yearsj on 2016/6/4.
  */
-public class PlayActivity extends FragmentActivity implements View.OnClickListener,MediaBrowserProvider {
+public class PlayActivity extends FragmentActivity implements View.OnClickListener,MediaBrowserProvider,MediaDescriptionInfo{
 
     private ViewPager mViewPager;
+    private MyFragmentAdapter myFragmentAdapter;
     private List<Fragment> fragments;
     private View dot1;
     private View dot2;
     private ImageView list_play;
-    private TextView title;
-    private TextView author;
+
+    private TextView endText;
+    private TextView startText;
     private ImageView background;
     private ImageView playStatus;
     private ImageView next;
     private ImageView pre;
     private SeekBar processSeekBar;
 
+    private Timer timer = new Timer();
+
     private Bitmap albumCover;
     private String currentArtUrl;
     private MediaBrowserCompat mMediaBrowser;
     private PlaybackStateCompat mPlaybackState;
+    private MediaDescriptionCompat mCurrentDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +100,25 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         mMediaBrowser.disconnect();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(timer!=null){
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     private void updateCompnent(MediaDescriptionCompat description){
         if(null!=description){
-            title.setText(description.getTitle());
-            author.setText(description.getSubtitle());
             fetchImageAsync(description);
         }
-
+        mCurrentDescription = description;
         fragments = new ArrayList<Fragment>();
-        fragments.add(AlbumFragment.newInstance(albumCover));
+        fragments.add(new AlbumFragment());
         fragments.add(new PlayListFragment());
-        mViewPager.setAdapter(new MyFragmentAdapter(this.getSupportFragmentManager(), fragments));
+        myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
+        mViewPager.setAdapter(myFragmentAdapter);
         changeDot(0);
     }
 
@@ -115,8 +129,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         dot2 = (View)findViewById(R.id.dot_2);
         list_play = (ImageView)findViewById(R.id.list_play);
         list_play.setOnClickListener(this);
-        title = (TextView)findViewById(R.id.title_play);
-        author=(TextView)findViewById(R.id.author_paly);
+        endText = (TextView)findViewById(R.id.endText);
+        startText = (TextView)findViewById(R.id.startText);
         background = (ImageView)findViewById(R.id.full_background);
         playStatus = (ImageView)findViewById(R.id.play_tatus);
         playStatus.setOnClickListener(this);
@@ -125,8 +139,26 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         pre  = (ImageView)findViewById(R.id.pre_play);
         pre.setOnClickListener(this);
         processSeekBar = (SeekBar)findViewById(R.id.process);
+        processSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                startText.setText(DateUtils.formatElapsedTime(progress / 1000));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                stopTimer();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                getSupportMediaController().getTransportControls().seekTo(seekBar.getProgress());
+                scheduleTimer();
+            }
+        });
     }
 
+    //得到专辑封面
     private void fetchImageAsync(MediaDescriptionCompat description) {
         final Bitmap[] tempBitmap = new Bitmap[1];
         if (description.getIconUri() == null) {
@@ -185,11 +217,12 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         public void onMetadataChanged(MediaMetadataCompat metadata) {
             if (metadata != null) {
                 updateCompnent(metadata.getDescription());
-                //updateDuration(metadata);
+                updateDuration(metadata);
             }
         }
     };
 
+    //连接session
     private void connectToSession(MediaSessionCompat.Token token) throws RemoteException {
         MediaControllerCompat mediaController = new MediaControllerCompat(
                 PlayActivity.this, token);
@@ -204,15 +237,16 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         MediaMetadataCompat metadata = mediaController.getMetadata();
         if (metadata != null) {
             updateCompnent(metadata.getDescription());
-            //updateDuration(metadata);
+            updateDuration(metadata);
         }
-        //updateProgress();
+        updateProgress();
         if (state != null && (state.getState() == PlaybackStateCompat.STATE_PLAYING ||
                 state.getState() == PlaybackStateCompat.STATE_BUFFERING)) {
-            //scheduleSeekbarUpdate();
+            scheduleTimer();
         }
     }
 
+    //根据播放状态修改界面
     private void updatePlaybackState(PlaybackStateCompat state) {
         if (state == null) {
             return;
@@ -222,15 +256,67 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         switch (state.getState()) {
             case PlaybackStateCompat.STATE_PLAYING:
                 playStatus.setImageResource(R.drawable.pause);
-                //scheduleSeekbarUpdate();
+                scheduleTimer();
                 break;
             case PlaybackStateCompat.STATE_PAUSED:
             case PlaybackStateCompat.STATE_NONE:
             case PlaybackStateCompat.STATE_STOPPED:
             case PlaybackStateCompat.STATE_BUFFERING:
                 playStatus.setImageResource(R.drawable.play);
-                //stopSeekbarUpdate();
+                stopTimer();
                 break;
+        }
+    }
+
+    //更新进度条
+    private void updateProgress(){
+        if (mPlaybackState == null) {
+            return;
+        }
+        //上一次状态改变的位置
+        long currentPosition = mPlaybackState.getPosition();
+        if (mPlaybackState.getState() != PlaybackStateCompat.STATE_PAUSED) {
+            long timeDelta = SystemClock.elapsedRealtime() - mPlaybackState.getLastPositionUpdateTime();
+            //加上状态改变后的长度
+            currentPosition += (int) timeDelta * mPlaybackState.getPlaybackSpeed();
+        }
+        processSeekBar.setProgress((int) currentPosition);
+    }
+
+    //根据音乐播放时长修改界面
+    private void updateDuration(MediaMetadataCompat metadata) {
+        if (metadata == null) {
+            return;
+        }
+        int duration = (int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+        processSeekBar.setMax(duration);
+        endText.setText(DateUtils.formatElapsedTime(duration / 1000));
+    }
+
+
+    Handler handler = new Handler();
+    Runnable updateSeekBar = new Runnable(){
+        public void run() {
+            updateProgress();
+        }
+    };
+
+    //打开计时器
+    private void scheduleTimer() {
+            timer.cancel();
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(updateSeekBar);
+                }
+            },100,1000);
+    }
+
+    //停止计时器
+    private void stopTimer(){
+        if (timer!=null) {
+           timer.cancel();
         }
     }
 
@@ -258,12 +344,12 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                         case PlaybackStateCompat.STATE_PLAYING:
                         case PlaybackStateCompat.STATE_BUFFERING:
                             transportControls.pause();
-                            //stopSeekbarUpdate();
+                            stopTimer();
                             break;
                         case PlaybackStateCompat.STATE_PAUSED:
                         case PlaybackStateCompat.STATE_STOPPED:
                             transportControls.play();
-                            //scheduleSeekbarUpdate();
+                            scheduleTimer();
                             break;
                     }
                 }
@@ -284,7 +370,17 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onMediaItemSelected(MediaBrowserCompat.MediaItem playigMusic) {
+        return;
+    }
 
+    @Override
+    public MediaDescriptionCompat getCurrentMediaDescription() {
+        return mCurrentDescription;
+    }
+
+    @Override
+    public Bitmap getCurrentMediaBitmap() {
+        return albumCover;
     }
 
     /**

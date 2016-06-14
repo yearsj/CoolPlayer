@@ -378,13 +378,6 @@ public class SongsListFragment extends BaseFragment {
 
             @Override
             protected Boolean doInBackground(Void... params) {
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
                 return true;
             }
         }.execute();

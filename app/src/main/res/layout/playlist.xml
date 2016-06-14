@@ -20,7 +20,10 @@
         android:textColor="@color/textColor"
         android:layout_toRightOf="@id/play_status_list"
         android:layout_marginLeft="20dp"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:ellipsize="end"  />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +33,7 @@
         android:textSize="15sp"
         android:textColor="@color/textColor"
         android:layout_toRightOf="@id/title_play_list"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,5 +43,8 @@
         android:textSize="15sp"
         android:textColor="@color/textColor"
         android:layout_toRightOf="@id/temp_line"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:ellipsize="end" />
 </RelativeLayout>
