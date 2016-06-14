@@ -51,7 +51,7 @@ public class PlayingFragment extends Fragment{
 
 	private String mArtUrl;
 
-	PlayListFragment playListFragment;
+	QueueFragment playListFragment;
 
 	static boolean  showList=false;
 
@@ -121,7 +121,7 @@ public class PlayingFragment extends Fragment{
 
 	void subscribePlayList(){
 		if(playListFragment==null)
-			playListFragment=new PlayListFragment();
+			playListFragment=new QueueFragment();
 		FragmentTransaction transaction = ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.playListFrame,playListFragment);
 		transaction.addToBackStack(null);
@@ -134,10 +134,10 @@ public class PlayingFragment extends Fragment{
 		Animation anim = null;
 		if(!showList){
 			this.showList=true;
-			subscribePlayList();
 			anim = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_bottom_to_up);
 			showPlayListLayout.setAnimation(anim);
 			playListLayout.setVisibility(View.VISIBLE);
+			subscribePlayList();
 		}else{
 			this.showList=false;
 			anim = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_up_to_bottom);

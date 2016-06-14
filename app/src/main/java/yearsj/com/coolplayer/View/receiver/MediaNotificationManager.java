@@ -164,6 +164,8 @@ public class MediaNotificationManager extends BroadcastReceiver {
                 .setContentIntent(createContentIntent(description))
                 .setContentTitle(description.getTitle())
                 .setContentText(description.getSubtitle())
+                .setLargeIcon(art)
+                .setSmallIcon(R.drawable.background)
                 .setLargeIcon(art);
 
 

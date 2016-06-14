@@ -109,6 +109,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    //更新控件
     private void updateCompnent(MediaDescriptionCompat description){
         if(null!=description){
             fetchImageAsync(description);
@@ -230,8 +231,9 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
             finish();
             return;
         }
-        setSupportMediaController(mediaController);
+
         mediaController.registerCallback(mControllerCallback);
+        setSupportMediaController(mediaController);
         PlaybackStateCompat state = mediaController.getPlaybackState();
         updatePlaybackState(state);
         MediaMetadataCompat metadata = mediaController.getMetadata();
@@ -316,7 +318,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     //停止计时器
     private void stopTimer(){
         if (timer!=null) {
-           timer.cancel();
+            timer.cancel();
         }
     }
 
@@ -344,12 +346,12 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                         case PlaybackStateCompat.STATE_PLAYING:
                         case PlaybackStateCompat.STATE_BUFFERING:
                             transportControls.pause();
-                            stopTimer();
+                            //stopTimer();
                             break;
                         case PlaybackStateCompat.STATE_PAUSED:
                         case PlaybackStateCompat.STATE_STOPPED:
                             transportControls.play();
-                            scheduleTimer();
+                            //scheduleTimer();
                             break;
                     }
                 }
