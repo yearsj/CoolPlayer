@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/playList"
+        android:id="@+id/title_List"
         android:textColor="@color/textColor"
         android:textSize="25sp"
         android:maxEms="8"

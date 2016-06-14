@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class QueueFragment extends BaseFragment {
     private View view = null;
     private MediaBrowserProvider mediaBrowserProvider;
     private List<MediaSessionCompat.QueueItem> currentQueue;
+    private TextView titleList;
     protected boolean isExtend;
 
     @Override
@@ -51,6 +53,7 @@ public class QueueFragment extends BaseFragment {
             }
         });
 
+        titleList = (TextView)view.findViewById(R.id.title_List);
         return view;
     }
 
@@ -63,8 +66,10 @@ public class QueueFragment extends BaseFragment {
     @Override
     public void onStart() {
         super.onStart();
-        if(!isExtend)
+        if(!isExtend) {
             connect();
+            titleList.setVisibility(View.GONE);
+        }
     }
 
     protected void connect(){
