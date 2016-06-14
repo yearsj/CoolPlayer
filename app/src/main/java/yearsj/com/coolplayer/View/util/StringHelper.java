@@ -15,7 +15,7 @@ public class StringHelper {
     }
 
     public static String getFormatBrowerByLength(String brower,int length){
-        String title=brower.substring(brower.indexOf("/")+1);
+        String title=brower.substring(brower.indexOf("/") + 1);
         if(title.length()>length)
             title=title.substring(0,length)+"...";
         return title;

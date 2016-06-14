@@ -9,14 +9,13 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.util.Log;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
+import java.util.TreeMap;
 import yearsj.com.coolplayer.View.ui.R;
+import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.MediaIDHelper;
 
@@ -30,10 +29,10 @@ public class MusicProvider {
     private MusicProviderSource mSource;
 
     // Categorized caches for music track data:
-    private ConcurrentMap<String, List<MediaMetadataCompat>> mMusicListByAlbum;
-    private ConcurrentMap<String, List<MediaMetadataCompat>> mMusicListBySinger;
+    private TreeMap<String, List<MediaMetadataCompat>> mMusicListByAlbum;
+    private TreeMap<String, List<MediaMetadataCompat>> mMusicListBySinger;
     private List<MediaMetadataCompat> mAllMusicList;
-    private final ConcurrentMap<String, MutableMediaMetadata> mMusicListById;
+    private final TreeMap<String, MutableMediaMetadata> mMusicListById;
 
     enum State {
         NON_INITIALIZED, INITIALIZING, INITIALIZED
@@ -50,9 +49,9 @@ public class MusicProvider {
     }
     public MusicProvider(MusicProviderSource source) {
         mSource = source;
-        mMusicListByAlbum = new ConcurrentHashMap<>();
-        mMusicListBySinger = new ConcurrentHashMap<>();
-        mMusicListById = new ConcurrentHashMap<>();
+        mMusicListByAlbum = new TreeMap<>();
+        mMusicListBySinger = new TreeMap<>();
+        mMusicListById = new TreeMap<>();
         mAllMusicList = new ArrayList<>();
 
     }
@@ -178,6 +177,19 @@ public class MusicProvider {
         }.execute();
     }
 
+    private Comparator<MediaMetadataCompat> listCompatComparator = new Comparator<MediaMetadataCompat>() {
+        @Override
+        public int compare(MediaMetadataCompat lhs, MediaMetadataCompat rhs) {
+            String title1 = lhs.getDescription().getTitle().toString();
+            String title2 = rhs.getDescription().getTitle().toString();
+            CharacterParser characterParser = CharacterParser.getInstance();
+            String pinyin1 = characterParser.getSelling(title1).toUpperCase();
+            String pinyin2 = characterParser.getSelling(title2).toUpperCase();
+
+            return pinyin1.compareTo(pinyin2);
+        }
+    };
+
     //所有音乐
     private synchronized void buildAllMusicLists() {
         for (MutableMediaMetadata m : mMusicListById.values()) {
@@ -186,11 +198,12 @@ public class MusicProvider {
             }
             mAllMusicList.add(m.metadata);
         }
+        Collections.sort(mAllMusicList,listCompatComparator);
     }
 
     //专辑分类
     private synchronized void buildListsByAlbum() {
-        ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListByAlbum = new ConcurrentHashMap<>();
+        TreeMap<String, List<MediaMetadataCompat>> newMusicListByAlbum = new TreeMap<>();
 
         for (MutableMediaMetadata m : mMusicListById.values()) {
             String album = m.metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
@@ -200,13 +213,14 @@ public class MusicProvider {
                 newMusicListByAlbum.put(album, list);
             }
             list.add(m.metadata);
+            Collections.sort(list, listCompatComparator);
         }
         mMusicListByAlbum = newMusicListByAlbum;
     }
 
     //歌手分类
     private synchronized void buildListsBySinger() {
-        ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListBySinger = new ConcurrentHashMap<>();
+        TreeMap<String, List<MediaMetadataCompat>> newMusicListBySinger = new TreeMap<>();
 
         for (MutableMediaMetadata m : mMusicListById.values()) {
             String singer = m.metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
@@ -216,6 +230,7 @@ public class MusicProvider {
                 newMusicListBySinger.put(singer, list);
             }
             list.add(m.metadata);
+            Collections.sort(list, listCompatComparator);
         }
         mMusicListBySinger = newMusicListBySinger;
     }
