@@ -18,18 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import yearsj.com.coolplayer.View.adapter.ChangeTextColorAdapter;
 import yearsj.com.coolplayer.View.ui.MainActivity;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.AlbumArtCache;

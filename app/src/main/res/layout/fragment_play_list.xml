@@ -2,7 +2,7 @@
 <LinearLayout
     android:id="@+id/fragment_play_list"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="180pt"
     android:orientation="vertical"
     android:background="@color/deepdarkGrey"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/playList"
             android:textSize="10pt"
+            android:padding="5pt"
             android:layout_gravity="center"
             android:layout_marginLeft="7pt"
             />
