@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -73,7 +74,6 @@ public class PlayingFragment extends Fragment{
 	{  
 		view = inflater.inflate(R.layout.fragment_playing, container, false);
 		init();
-	//	playListFragment = (PlayListFragment)(((MainActivity)getActivity()).getSupportFragmentManager().findFragmentById(R.id.playListFragment));
 		return view;  
 	}
 
@@ -119,10 +119,22 @@ public class PlayingFragment extends Fragment{
 	}
 
 
+	void subscribePlayList(){
+		if(playListFragment==null)
+			playListFragment=new PlayListFragment();
+		FragmentTransaction transaction = ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.playListFrame,playListFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
+	}
+
+
+
 	 void showPlayList(){
 		Animation anim = null;
 		if(!showList){
 			this.showList=true;
+			subscribePlayList();
 			anim = AnimationUtils.loadAnimation(view.getContext(), R.anim.slide_bottom_to_up);
 			showPlayListLayout.setAnimation(anim);
 			playListLayout.setVisibility(View.VISIBLE);

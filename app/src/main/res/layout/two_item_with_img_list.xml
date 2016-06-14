@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="3mm"
+    android:singleLine="true"
         android:textColor="@color/black" />
 
     <TextView
@@ -32,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5pt"
+        android:singleLine="true"
         android:textColor="@color/deepdarkGrey" />
 
        <View

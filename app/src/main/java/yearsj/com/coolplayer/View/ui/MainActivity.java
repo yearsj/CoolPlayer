@@ -78,7 +78,10 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 	@Override
 	protected void onStart() {
 		super.onStart();
-		hidePlaybackControls();
+		if(!shouldShowControls())
+		     hidePlaybackControls();
+		else
+			showPlaybackControls();
 		mediaBrowserCompat.connect();
 	}
 

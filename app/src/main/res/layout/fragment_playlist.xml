@@ -2,12 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:background="@color/totalTrans"
     android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/playList"
+        android:textColor="@color/textColor"
+        android:textSize="25sp"
+        android:maxEms="8"
+        android:layout_marginTop="10pt"
+        android:layout_gravity="center"
+        android:ellipsize="end"
+        />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/play_list"
-        android:background="@color/backgraoudcolor">
+        android:divider="@color/trans"
+        android:paddingLeft="10pt"
+        android:paddingRight="10pt"
+        android:paddingTop="10pt"
+        android:dividerHeight="1sp"
+        >
     </ListView>
 </LinearLayout>

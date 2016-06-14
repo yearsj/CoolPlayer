@@ -7,8 +7,9 @@
 
     <ImageView
         android:id="@+id/play_status_list"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="15pt"
+        android:layout_height="15pt"
+        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
 
     <TextView
