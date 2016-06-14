@@ -98,12 +98,6 @@ public class MainFragment extends Fragment{
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.findByTime:
-
-                        break;
-                    case R.id.findByName:
-
-                        break;
                     case R.id.findLocalMusic:
                         Intent intent = new Intent();
                         intent.setClass(getActivity(), FindLocalMusicActivity.class);

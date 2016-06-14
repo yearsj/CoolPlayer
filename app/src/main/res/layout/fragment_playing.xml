@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -26,6 +26,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="30pt"
+        android:background="@color/white"
+        android:layout_gravity="bottom"
         >
     <ImageView
         android:id="@+id/poster"
@@ -72,4 +74,4 @@
             android:layout_marginRight="20pt"
             android:src="@drawable/play_music" />
     </RelativeLayout>
-</LinearLayout>
+</FrameLayout>

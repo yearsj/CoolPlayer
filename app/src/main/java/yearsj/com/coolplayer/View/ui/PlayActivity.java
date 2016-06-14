@@ -65,6 +65,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     private MediaBrowserCompat mMediaBrowser;
     private PlaybackStateCompat mPlaybackState;
     private MediaDescriptionCompat mCurrentDescription;
+    private int currentPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,13 +115,14 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         if(null!=description){
             fetchImageAsync(description);
         }
+
         mCurrentDescription = description;
         fragments = new ArrayList<Fragment>();
         fragments.add(new AlbumFragment());
         fragments.add(new PlayListFragment());
         myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
         mViewPager.setAdapter(myFragmentAdapter);
-        changeDot(0);
+        changeDot(currentPage);
     }
 
     private void initView(){
@@ -158,6 +160,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
             }
         });
     }
+
 
     //得到专辑封面
     private void fetchImageAsync(MediaDescriptionCompat description) {
@@ -400,6 +403,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         public void onPageSelected(int arg0) {
             // TODO Auto-generated method stub
             changeDot(arg0);
+            currentPage = arg0;
         }
     }
 
