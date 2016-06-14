@@ -32,8 +32,8 @@
     </style>
 
     <style name="picStyle">
-        <item name="android:layout_width">25pt</item>
-        <item name="android:layout_height">25pt</item>
+        <item name="android:layout_width">20pt</item>
+        <item name="android:layout_height">20pt</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
