@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,7 @@ public class PlayingFragment extends Fragment{
 	private TextView mTitle;
 	private TextView mSubtitle;
 	private ImageView mAlbumArt;
+	private Button closeListButton;
 
 	private String mArtUrl;
 
@@ -73,6 +75,7 @@ public class PlayingFragment extends Fragment{
 		lines= (ImageView) view.findViewById(R.id.playList);
 		playListLayout=view.findViewById(R.id.playListLayout);
 		showPlayListLayout=view.findViewById(R.id.fragment_play_list);
+		closeListButton= (Button) view.findViewById(R.id.closeList);
 	//	list = (ListView) view.findViewById(R.id.playLists);
 		mTitle=(TextView)view.findViewById(R.id.musicName);
 		mSubtitle=(TextView)view.findViewById(R.id.musicInfo);
@@ -108,6 +111,12 @@ public class PlayingFragment extends Fragment{
 			}
 		});
 
+		closeListButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showPlayList();
+			}
+		});
 	}
 
 
