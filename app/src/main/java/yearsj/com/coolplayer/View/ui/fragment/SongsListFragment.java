@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -29,6 +30,7 @@ import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
+import yearsj.com.coolplayer.View.ui.view.SearchInfoTextView;
 import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.PinyinComparator;
@@ -51,19 +53,20 @@ public class SongsListFragment extends BaseFragment {
     LayoutInflater inflater;
 
     private SortAdapter adapter;
-    private CharacterSideBarView sideBar;
-    private TextView dialog;
+    private static CharacterSideBarView sideBar;
+    private static TextView dialog;
 
 
     private String mMediaId;
     private PinyinComparator pinyinComparator;
     private CharacterParser characterParser;
     private List<SortModel> sourceDataList;
-    private int listViewHeight;
+    private static int listViewHeight;
 
     private List<String>  titles;
     List<MediaBrowserCompat.MediaItem> songs;
     private MediaBrowserProvider mediaBrowserProvider;
+    private SearchInfoTextView filterEdit;
 
     private static final String TAG = LogHelper.makeLogTag(SongsListFragment.class.getSimpleName());
     private static final String ARG_MEDIA_ID = "media_id";
@@ -114,7 +117,6 @@ public class SongsListFragment extends BaseFragment {
                             adapter.add(map,sourceDataList);
                         }
                         adapter.notifyDataSetChanged();
-                        setListViewHeightBasedOnChildren(list);
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
                     }
@@ -148,29 +150,6 @@ public class SongsListFragment extends BaseFragment {
     }
 
 
-    /**
-     * 根据listView的数据个数动态的改变高度
-     * @param listView
-     */
-    private void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-        int totalHeight = 0;
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -187,6 +166,7 @@ public class SongsListFragment extends BaseFragment {
     }
 
     void initial() {
+        filterEdit= (SearchInfoTextView) view.findViewById(R.id.filter_edit);
         list = (ListView) view.findViewById(R.id.songListView);
         sideBar = (CharacterSideBarView) view.findViewById(R.id.sidebars);
         dialog = (TextView)view.findViewById(R.id.adialog);
@@ -198,24 +178,25 @@ public class SongsListFragment extends BaseFragment {
         loadAdapter();
         setOnListListener();
 
-        listViewHeight=getActivity().getWindowManager().getDefaultDisplay().getHeight()/3*2;
+        setSideBarHight(listViewHeight);
         sideBar.setTextView(dialog, listViewHeight);
         sideBar.setOnTouchingLetterChangedListener(new CharacterSideBarView.OnTouchingLetterChangedListener() {
 
             @Override
             public void onTouchingLetterChanged(String s) {
                 final int position = adapter.getPositionForSection(s.charAt(0));
-                System.out.println("position================" + position);
-                Log.i("position", position + "");
                 if (position != -1) {
                     list.setSelection(position);
-                    list.smoothScrollToPositionFromTop(position, 0, 500);//滑动到position  距离top的偏移量  滑动所用的时间
-                    adapter.notifyDataSetInvalidated();
-
                 }
 
             }
         });
+    }
+
+    public static void setSideBarHight(int hight){
+        listViewHeight=hight;
+        if(sideBar!=null)
+            sideBar.setTextView(dialog, hight);
     }
 
     /**
@@ -238,6 +219,21 @@ public class SongsListFragment extends BaseFragment {
 
      list.setAdapter(adapter);
 
+        list.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if(firstVisibleItem==0){
+                        filterEdit.setVisibility(View.VISIBLE);
+                    }else{
+                        filterEdit.setVisibility(view.GONE);
+                    }
+            }
+        });
     }
 
 
@@ -340,7 +336,6 @@ public class SongsListFragment extends BaseFragment {
 
         mediaBrowserProvider.getMediaBrowser().subscribe(mMediaId, mSubscriptionCallback);
 
-        // Add MediaController callback so we can redraw the list when metadata changes:
         MediaControllerCompat controller = ((FragmentActivity) getActivity())
                 .getSupportMediaController();
         if (controller != null) {

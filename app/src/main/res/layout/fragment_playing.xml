@@ -32,8 +32,7 @@
         style="@style/picStyle"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="2pt"
-        android:onClick="showPlayInfo"
-        android:src="@drawable/poster" />
+        android:onClick="showPlayInfo" />
 
     <LinearLayout
         android:id="@+id/text"
@@ -47,7 +46,6 @@
             android:id="@+id/musicName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/musicName"
             android:textColor="@color/likeBlack"
             android:textSize="20sp" />
 
@@ -55,7 +53,6 @@
             android:id="@+id/musicInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/musicInfo"
             android:textColor="@color/deepdarkGrey"
             android:textSize="15sp" />
     </LinearLayout>

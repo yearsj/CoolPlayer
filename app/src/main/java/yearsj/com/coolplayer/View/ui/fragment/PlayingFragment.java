@@ -33,6 +33,7 @@ import yearsj.com.coolplayer.View.ui.MainActivity;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.AlbumArtCache;
 import yearsj.com.coolplayer.View.util.LogHelper;
+import yearsj.com.coolplayer.View.util.StringHelper;
 
 @SuppressLint("NewApi")
 public class PlayingFragment extends Fragment{
@@ -87,7 +88,6 @@ public class PlayingFragment extends Fragment{
 		mPlayPause=(ImageView)view.findViewById(R.id.playMusic);
 
 	//	loadData();
-	//	setListViewHeightBasedOnChildren(list);
 	//	setOnListListener();
 		lines.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -118,22 +118,6 @@ public class PlayingFragment extends Fragment{
 
 	}
 
-//	private void setListViewHeightBasedOnChildren(ListView listView) {
-//		ListAdapter listAdapter = listView.getAdapter();
-//		if (listAdapter == null) {
-//			// pre-condition
-//			return;
-//		}
-//		int totalHeight = 0;
-//		for (int i = 0; i < listAdapter.getCount(); i++) {
-//			View listItem = listAdapter.getView(i, null, listView);
-//			listItem.measure(0, 0);
-//			totalHeight += listItem.getMeasuredHeight();
-//		}
-//		ViewGroup.LayoutParams params = listView.getLayoutParams();
-//		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-//		listView.setLayoutParams(params);
-//	}
 
 	 void showPlayList(){
 		Animation anim = null;
@@ -249,7 +233,7 @@ public class PlayingFragment extends Fragment{
 			return;
 		}
 
-		mTitle.setText(metadata.getDescription().getTitle());
+		mTitle.setText(StringHelper.getFormatTitle(metadata));
 		mSubtitle.setText(metadata.getDescription().getSubtitle());
 
 

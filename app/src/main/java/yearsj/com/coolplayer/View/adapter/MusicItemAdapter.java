@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import yearsj.com.coolplayer.View.model.MusicItem;
@@ -35,6 +36,11 @@ public class MusicItemAdapter extends ArrayAdapter<MusicItem>{
         titleView.setText(musicItem.getTitle());
         infoView.setText(musicItem.getInfo());
 
+        View imageView=view.findViewById(R.id.posterView);
+        if(imageView!=null){
+            ImageView posterView=(ImageView)imageView;
+            posterView.setImageResource(musicItem.getSourceId());
+        }
         return view;
     }
 
