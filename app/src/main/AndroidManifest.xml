@@ -24,7 +24,6 @@
         <activity android:name=".PlayActivity">
 
         </activity>
-        <activity android:name=".FindLocalMusicActivity"></activity>
 
         <service
             android:name="yearsj.com.coolplayer.View.service.MusicService"

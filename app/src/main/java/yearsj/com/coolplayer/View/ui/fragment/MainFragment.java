@@ -21,7 +21,6 @@ import android.widget.PopupMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import yearsj.com.coolplayer.View.ui.FindLocalMusicActivity;
 import yearsj.com.coolplayer.View.ui.MainActivity;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.util.MediaIDHelper;
@@ -30,12 +29,6 @@ import yearsj.com.coolplayer.View.util.MediaIDHelper;
  * Created by bing on 2016/6/13.
  */
 public class MainFragment extends Fragment{
-    /**弹出菜单*/
-    private PopupMenu popupMenu;
-    /**菜单*/
-    private Menu menu;
-    private ImageView menuImage;
-
     ViewPager pager;
     View view;
 
@@ -66,51 +59,9 @@ public class MainFragment extends Fragment{
 
 
     public void initial(){
-        menuImage=(ImageView) view.findViewById(R.id.menu);
-        initialMenu();
         initialViewPager();
-
-        menuImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupMenu.show();
-            }
-        });
     }
 
-    /**
-     *
-     * 初始化菜单
-     */
-    @SuppressLint("NewApi")
-    void initialMenu(){
-        popupMenu = new PopupMenu(view.getContext(), view.findViewById(R.id.menu));
-        menu = popupMenu.getMenu();
-
-        //通过XML导入菜单栏
-        MenuInflater menuInflater = getActivity().getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu, menu);
-
-        // 设置监听事件
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.findLocalMusic:
-                        Intent intent = new Intent();
-                        intent.setClass(getActivity(), MainActivity.class);
-                        startActivity(intent);
-                        getActivity().overridePendingTransition(R.animator.slide_in_right, R.animator.slide_out_left);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-    }
 
 
     public void initialViewPager(){

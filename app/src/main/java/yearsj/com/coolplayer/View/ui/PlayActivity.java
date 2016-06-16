@@ -1,14 +1,11 @@
 package yearsj.com.coolplayer.View.ui;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.session.MediaController;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -30,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,13 +160,6 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
             myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
             mViewPager.setAdapter(myFragmentAdapter);
         }
-//        else{
-//            fragments.remove(0);
-//            fragments.add(0, new AlbumFragment());
-//            myFragmentAdapter.getItem(0);
-//            myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
-//            mViewPager.setAdapter(myFragmentAdapter);
-//        }
 
         changeDot(currentPage);
         mViewPager.setCurrentItem(currentPage);
@@ -429,14 +420,17 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
             case 0: mode = 1; bundle.putInt(PlaybackManager.PLAY_MODE,PlaybackManager.SING_CYCLE);
                 transportControls.sendCustomAction(PlaybackManager.ACTION_MODE, bundle);
                 play_mode.setImageResource(R.drawable.single_play);
+                Toast.makeText(this,"单曲循环",Toast.LENGTH_SHORT).show();
                 break;
             case 1: mode = 2; bundle.putInt(PlaybackManager.PLAY_MODE, PlaybackManager.RANDOM_CYCLE);
                 transportControls.sendCustomAction(PlaybackManager.ACTION_MODE, bundle);
                 play_mode.setImageResource(R.drawable.play_random_play);
+                Toast.makeText(this,"随机播放",Toast.LENGTH_SHORT).show();
                 break;
             case 2: mode = 0; bundle.putInt(PlaybackManager.PLAY_MODE,PlaybackManager.LIST_LOOP);
-                transportControls.sendCustomAction(PlaybackManager.ACTION_MODE,bundle);
+                transportControls.sendCustomAction(PlaybackManager.ACTION_MODE, bundle);
                 play_mode.setImageResource(R.drawable.play_list_loop);
+                Toast.makeText(this,"列表循环",Toast.LENGTH_SHORT).show();
                 break;
         }
     }
