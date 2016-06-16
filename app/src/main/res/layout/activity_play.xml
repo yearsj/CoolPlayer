@@ -26,14 +26,6 @@
             android:layout_alignParentTop="true"
             android:id="@+id/back"/>
 
-        <ImageView
-           style="@style/picButtonStyle"
-            android:src ="@drawable/more"
-            android:id="@+id/list_play"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true" />
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,8 +34,18 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="8mm"
             android:layout_marginRight="8mm"
+            android:layout_marginTop="2mm"
             android:id="@+id/linear_middle"
             android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:layout_width="20pt"
+                android:layout_height="20pt"
+                android:layout_marginRight="20dp"
+                android:src ="@drawable/play_list_loop"
+                android:id="@+id/play_mode"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"/>
 
             <ImageView
                 android:layout_height="13pt"
@@ -69,6 +71,15 @@
                 android:layout_marginLeft="10pt"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"/>
+
+            <ImageView
+                android:layout_width="17pt"
+                android:layout_height="17pt"
+                android:src ="@drawable/more"
+                android:id="@+id/list_play"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -134,7 +145,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
         android:orientation="vertical"
-        android:layout_below="@id/list_play"
+        android:layout_below="@id/back"
         android:layout_above="@id/linear_dot"
         android:id="@+id/viewpager_play" />
     </RelativeLayout>

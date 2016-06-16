@@ -60,7 +60,7 @@ public interface Playback {
     /**
      * @param item to play
      */
-    void play(MediaSessionCompat.QueueItem item);
+    void play(MediaSessionCompat.QueueItem item, boolean singleCycle);
 
     /**
      * Pause the current playing item

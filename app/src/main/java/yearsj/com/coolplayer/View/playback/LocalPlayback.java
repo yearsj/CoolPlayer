@@ -128,13 +128,13 @@ public class LocalPlayback implements Playback, AudioManager.OnAudioFocusChangeL
     }
 
     @Override
-    public void play(MediaSessionCompat.QueueItem item) {
+    public void play(MediaSessionCompat.QueueItem item, boolean singleCycle) {
         mPlayOnFocusGain = true;
         tryToGetAudioFocus();
         registerAudioNoisyReceiver();
         String mediaId = item.getDescription().getMediaId();
         boolean mediaHasChanged = !TextUtils.equals(mediaId, mCurrentMediaId);
-        if (mediaHasChanged) {
+        if (mediaHasChanged||singleCycle) {
             mCurrentPosition = 0;
             mCurrentMediaId = mediaId;
         }

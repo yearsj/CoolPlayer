@@ -16,7 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -37,7 +40,11 @@ public class PlayListFragment extends QueueFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isPrepared = true;
         isExtend = true;
-        return super.onCreateView(inflater,container,savedInstanceState);
+        View view = super.onCreateView(inflater,container,savedInstanceState);
+        TextView title = (TextView)view.findViewById(R.id.title_List);
+        title.setText("播放列表");
+
+        return view;
     }
 
     @Override

@@ -33,6 +33,7 @@ import yearsj.com.coolplayer.View.model.SortModel;
 import yearsj.com.coolplayer.View.ui.R;
 import yearsj.com.coolplayer.View.ui.view.CharacterSideBarView;
 import yearsj.com.coolplayer.View.ui.view.SearchInfoTextView;
+import yearsj.com.coolplayer.View.ui.view.WaitDialog;
 import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.PinyinComparator;
@@ -411,7 +412,8 @@ public class SongsListFragment extends BaseFragment {
             protected void onPreExecute() {
                 super.onPreExecute();
                 //显示加载进度对话框
-                System.out.println("正在加载...");
+                WaitDialog.showDialogForLoading(getActivity(), "正在加载", true);
+                //System.out.println("正在加载...");
             }
 
             @Override
@@ -424,6 +426,7 @@ public class SongsListFragment extends BaseFragment {
                     // 加载失败
                     Log.i("DailyFragment", "加载失败");
                 }
+                WaitDialog.hideDialogForLoading();
             }
 
             @Override

@@ -12,6 +12,11 @@ import yearsj.com.coolplayer.View.util.LogHelper;
 public class PlaybackManager implements Playback.Callback {
 
     private static final String TAG = LogHelper.makeLogTag(PlaybackManager.class.getSimpleName());
+    public static final String ACTION_MODE = "action_mode";
+    public static final String PLAY_MODE = "play_mode";      //播放模式
+    public static final int SING_CYCLE = 1;     //单曲循环
+    public static final int RANDOM_CYCLE = 2;   //随机播放
+    public static final int LIST_LOOP = 0; //顺序播放
 
     private MusicProvider mMusicProvider;
     private QueueManager mQueueManager;
@@ -19,6 +24,7 @@ public class PlaybackManager implements Playback.Callback {
     private Playback mPlayback;
     private PlaybackServiceCallback mServiceCallback;
     private MediaSessionCallback mMediaSessionCallback;
+    private int mCurrentPlayMode = LIST_LOOP;
 
     public PlaybackManager(PlaybackServiceCallback serviceCallback, Resources resources,
                            QueueManager queueManager, MusicProvider musicProvider, Playback playback) {
@@ -47,7 +53,7 @@ public class PlaybackManager implements Playback.Callback {
         MediaSessionCompat.QueueItem currentMusic = mQueueManager.getCurrentMusic();
         if (currentMusic != null) {
             mServiceCallback.onPlaybackStart();
-            mPlayback.play(currentMusic);
+            mPlayback.play(currentMusic,mCurrentPlayMode == SING_CYCLE);
         }
     }
 
@@ -127,17 +133,42 @@ public class PlaybackManager implements Playback.Callback {
     }
 
 
-    /**
-     * Implementation of the Playback.Callback interface
-     */
-    @Override
-    public void onCompletion() {
+    //随机播放
+    private void onRomdomPlay(){
+        if (mQueueManager.skipRomdomPosition()) {
+            handlePlayRequest();
+            mQueueManager.updateMetadata();
+        } else {
+            // if skip is not possible, we stop and release the resources
+            handleStopRequest(null);
+        }
+    }
+
+    //单曲循环
+    private void onSingePlay(){
+            handlePlayRequest();
+    }
+
+    //列表循环
+    private void onListLoop(){
         if (mQueueManager.skipQueuePosition(1)) {
             handlePlayRequest();
             mQueueManager.updateMetadata();
         } else {
             // if skip is not possible, we stop and release the resources
             handleStopRequest(null);
+        }
+    }
+
+    /**
+     * Implementation of the Playback.Callback interface
+     */
+    @Override
+    public void onCompletion() {
+        switch (mCurrentPlayMode){
+            case RANDOM_CYCLE:onRomdomPlay(); break;
+            case SING_CYCLE: onSingePlay(); break;
+            case LIST_LOOP: onListLoop(); break;
         }
     }
 
@@ -203,7 +234,9 @@ public class PlaybackManager implements Playback.Callback {
         @Override
         public void onSkipToNext() {
             LogHelper.d(TAG, "skipToNext");
-            if (mQueueManager.skipQueuePosition(1)) {
+            if ((mCurrentPlayMode==LIST_LOOP||mCurrentPlayMode==SING_CYCLE)&&mQueueManager.skipQueuePosition(1)) {
+                handlePlayRequest();
+            } else if(mCurrentPlayMode==RANDOM_CYCLE&&mQueueManager.skipRomdomPosition()){
                 handlePlayRequest();
             } else {
                 handleStopRequest("Cannot skip");
@@ -213,12 +246,22 @@ public class PlaybackManager implements Playback.Callback {
 
         @Override
         public void onSkipToPrevious() {
-            if (mQueueManager.skipQueuePosition(-1)) {
+            if ((mCurrentPlayMode==LIST_LOOP||mCurrentPlayMode==SING_CYCLE)&&mQueueManager.skipQueuePosition(-1)) {
+                handlePlayRequest();
+            } else if(mCurrentPlayMode==RANDOM_CYCLE&&mQueueManager.skipRomdomPosition()){
                 handlePlayRequest();
             } else {
                 handleStopRequest("Cannot skip");
             }
             mQueueManager.updateMetadata();
+        }
+
+        @Override
+        public void onCustomAction(String action, Bundle extras) {
+            if(action.equals(ACTION_MODE)){
+                int mode = extras.getInt(PLAY_MODE);
+                mCurrentPlayMode = mode;
+            }
         }
     }
 

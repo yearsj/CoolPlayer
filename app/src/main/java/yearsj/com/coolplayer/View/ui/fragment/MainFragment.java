@@ -100,7 +100,7 @@ public class MainFragment extends Fragment{
                 switch (item.getItemId()) {
                     case R.id.findLocalMusic:
                         Intent intent = new Intent();
-                        intent.setClass(getActivity(), FindLocalMusicActivity.class);
+                        intent.setClass(getActivity(), MainActivity.class);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.animator.slide_in_right, R.animator.slide_out_left);
                         break;

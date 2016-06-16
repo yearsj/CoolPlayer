@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import yearsj.com.coolplayer.View.model.MusicProvider;
 import yearsj.com.coolplayer.View.ui.R;
@@ -79,11 +80,31 @@ public class QueueManager {
         return index >= 0;
     }
 
+    //用于随机播放
+    public boolean skipRomdomPosition(){
+        int size = mPlayingQueue.size();
+        int random = new Random().nextInt(size) + 1;
+
+        int index = (mCurrentIndex + random)%size;
+        if(index == mCurrentIndex){
+            index++;
+            index %=size;
+        }
+
+        if (!QueueHelper.isIndexPlayable(index, mPlayingQueue)) {
+            LogHelper.e(TAG, "Cannot increment queue index by ", index,
+                    ". Current=", mCurrentIndex, " queue length=", mPlayingQueue.size());
+            return false;
+        }
+        mCurrentIndex = index;
+        return true;
+    }
+
+    //用于顺序播放或选择播放
     public boolean skipQueuePosition(int amount) {
         int index = mCurrentIndex + amount;
         if (index <0) {
-            // skip backwards before the first song will keep you on the first one
-            index = 0;
+            index = mPlayingQueue.size()-1;;
         } else {
             // skip forewards when in last song will cycle back to start of the queue
             index %= mPlayingQueue.size();

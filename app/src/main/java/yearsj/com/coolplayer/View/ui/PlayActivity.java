@@ -1,9 +1,12 @@
 package yearsj.com.coolplayer.View.ui;
 
+import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.session.MediaController;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -33,6 +36,7 @@ import java.util.TimerTask;
 import yearsj.com.coolplayer.View.adapter.MyFragmentAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.model.MediaDescriptionInfo;
+import yearsj.com.coolplayer.View.playback.PlaybackManager;
 import yearsj.com.coolplayer.View.service.MusicService;
 import yearsj.com.coolplayer.View.ui.fragment.AlbumFragment;
 import yearsj.com.coolplayer.View.ui.fragment.PlayListFragment;
@@ -56,6 +60,7 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     private ImageView playStatus;
     private ImageView next;
     private ImageView pre;
+    private ImageView play_mode;
     private SeekBar processSeekBar;
 
     private Timer timer = new Timer();
@@ -66,6 +71,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
     private PlaybackStateCompat mPlaybackState;
     private MediaDescriptionCompat mCurrentDescription;
     private int currentPage = 0;
+    private int mode = 0;
+    private PlayListFragment playListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,12 +124,24 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         }
 
         mCurrentDescription = description;
-        fragments = new ArrayList<Fragment>();
-        fragments.add(new AlbumFragment());
-        fragments.add(new PlayListFragment());
-        myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
-        mViewPager.setAdapter(myFragmentAdapter);
+        if(fragments == null){
+            fragments = new ArrayList<Fragment>();
+            fragments.add(new AlbumFragment());
+            playListFragment = new PlayListFragment();
+            fragments.add(playListFragment);
+            myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
+            mViewPager.setAdapter(myFragmentAdapter);
+        }
+//        else{
+//            fragments.remove(0);
+//            fragments.add(0, new AlbumFragment());
+//            myFragmentAdapter.getItem(0);
+//            myFragmentAdapter = new MyFragmentAdapter(this.getSupportFragmentManager(), fragments);
+//            mViewPager.setAdapter(myFragmentAdapter);
+//        }
+
         changeDot(currentPage);
+        mViewPager.setCurrentItem(currentPage);
     }
 
     private void initView(){
@@ -137,6 +156,8 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
         background = (ImageView)findViewById(R.id.full_background);
         playStatus = (ImageView)findViewById(R.id.play_tatus);
         playStatus.setOnClickListener(this);
+        play_mode = (ImageView)findViewById(R.id.play_mode);
+        play_mode.setOnClickListener(this);
         next  = (ImageView)findViewById(R.id.next_play);
         next.setOnClickListener(this);
         pre  = (ImageView)findViewById(R.id.pre_play);
@@ -364,6 +385,28 @@ public class PlayActivity extends FragmentActivity implements View.OnClickListen
                 break;
             case R.id.pre_play:
                 transportControls.skipToPrevious();
+                break;
+            case R.id.play_mode:
+                changeMode(transportControls);
+                break;
+        }
+    }
+
+    //更改播放模式
+    private void changeMode(MediaControllerCompat.TransportControls transportControls){
+        Bundle bundle = new Bundle();
+        switch (mode){
+            case 0: mode = 1; bundle.putInt(PlaybackManager.PLAY_MODE,PlaybackManager.SING_CYCLE);
+                transportControls.sendCustomAction(PlaybackManager.ACTION_MODE, bundle);
+                play_mode.setImageResource(R.drawable.single_play);
+                break;
+            case 1: mode = 2; bundle.putInt(PlaybackManager.PLAY_MODE, PlaybackManager.RANDOM_CYCLE);
+                transportControls.sendCustomAction(PlaybackManager.ACTION_MODE, bundle);
+                play_mode.setImageResource(R.drawable.play_random_play);
+                break;
+            case 2: mode = 0; bundle.putInt(PlaybackManager.PLAY_MODE,PlaybackManager.LIST_LOOP);
+                transportControls.sendCustomAction(PlaybackManager.ACTION_MODE,bundle);
+                play_mode.setImageResource(R.drawable.play_list_loop);
                 break;
         }
     }

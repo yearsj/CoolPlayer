@@ -62,6 +62,7 @@
         android:textColor="@color/white"
         android:padding="2pt"
         android:textScaleX="1"
+        android:id="@+id/findLocalMusic"
         />
 
 </LinearLayout>
