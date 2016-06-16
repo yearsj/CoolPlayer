@@ -46,6 +46,9 @@ public class QueueFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MediaSessionCompat.QueueItem item = playListAdapter.getItem(position);
+                if(playListAdapter.getmActiveQueueItemId() == item.getQueueId()){
+                    return;
+                }
                 MediaControllerCompat controller = ((FragmentActivity) getActivity()).getSupportMediaController();
                 if (controller != null) {
                     controller.getTransportControls().skipToQueueItem(item.getQueueId());

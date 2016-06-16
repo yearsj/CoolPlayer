@@ -18,7 +18,8 @@
     <string name="findLocalMusic">一键扫描本地音乐</string>
     <string name="findMusic">扫描歌曲</string>
     <string name="findMusicButton">一键扫描</string>
-    <string name="playList">播放列表</string>
+    <string name="playList">关闭播放列表</string>
+    <string name="close">关闭</string>
 
     <string name="favorite">Favorite</string>
     <string name="drawer_allmusic_title">All Music</string>

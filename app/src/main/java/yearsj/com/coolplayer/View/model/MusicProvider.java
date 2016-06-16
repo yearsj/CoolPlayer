@@ -207,6 +207,8 @@ public class MusicProvider {
 
         for (MutableMediaMetadata m : mMusicListById.values()) {
             String album = m.metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+            if(album == null)
+                continue;
             List<MediaMetadataCompat> list = newMusicListByAlbum.get(album);
             if (list == null) {
                 list = new ArrayList<>();
@@ -224,6 +226,8 @@ public class MusicProvider {
 
         for (MutableMediaMetadata m : mMusicListById.values()) {
             String singer = m.metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+            if(singer == null)
+                continue;
             List<MediaMetadataCompat> list = newMusicListBySinger.get(singer);
             if (list == null) {
                 list = new ArrayList<>();

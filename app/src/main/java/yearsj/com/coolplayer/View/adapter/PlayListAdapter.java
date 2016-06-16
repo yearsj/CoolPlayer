@@ -42,6 +42,10 @@ public class PlayListAdapter extends ArrayAdapter<MediaSessionCompat.QueueItem> 
         this.mActiveQueueItemId = id;
     }
 
+    public long getmActiveQueueItemId(){
+        return  this.mActiveQueueItemId;
+    }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

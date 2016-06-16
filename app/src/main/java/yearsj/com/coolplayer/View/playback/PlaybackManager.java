@@ -12,11 +12,11 @@ import yearsj.com.coolplayer.View.util.LogHelper;
 public class PlaybackManager implements Playback.Callback {
 
     private static final String TAG = LogHelper.makeLogTag(PlaybackManager.class.getSimpleName());
-    private static final String ACTION_MODE = "action_mode";
-    private static final String PLAY_MODE = "play_mode";      //播放模式
-    private static final int SING_CYCLE = 1;     //单曲循环
-    private static final int RANDOM_CYCLE = 2;   //随机播放
-    private static final int LIST_LOOP = 0; //顺序播放
+    public static final String ACTION_MODE = "action_mode";
+    public static final String PLAY_MODE = "play_mode";      //播放模式
+    public static final int SING_CYCLE = 1;     //单曲循环
+    public static final int RANDOM_CYCLE = 2;   //随机播放
+    public static final int LIST_LOOP = 0; //顺序播放
 
     private MusicProvider mMusicProvider;
     private QueueManager mQueueManager;
@@ -53,7 +53,7 @@ public class PlaybackManager implements Playback.Callback {
         MediaSessionCompat.QueueItem currentMusic = mQueueManager.getCurrentMusic();
         if (currentMusic != null) {
             mServiceCallback.onPlaybackStart();
-            mPlayback.play(currentMusic);
+            mPlayback.play(currentMusic,mCurrentPlayMode == SING_CYCLE);
         }
     }
 

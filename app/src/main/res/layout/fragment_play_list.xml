@@ -2,7 +2,7 @@
 <LinearLayout
     android:id="@+id/fragment_play_list"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="180pt"
     android:orientation="vertical"
     android:background="@color/deepdarkGrey"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,13 +14,15 @@
         android:orientation="vertical"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/closeList"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/playList"
             android:textSize="10pt"
             android:layout_gravity="center"
             android:layout_marginLeft="7pt"
+            android:background="@color/deepdarkGrey"
             />
 
     </LinearLayout>
@@ -43,5 +45,6 @@
         android:layout_height="1dp"
         android:background="@color/white"
         />
+
 
 </LinearLayout>

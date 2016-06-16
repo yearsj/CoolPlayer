@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 
 		SongsListFragment.setSideBarHight(sideBarHight);
 
+
 		getFragmentManager().beginTransaction()
 				.show(playingFragment)
 				.commit();
