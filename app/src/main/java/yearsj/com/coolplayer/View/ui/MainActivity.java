@@ -115,24 +115,27 @@ public class MainActivity extends AppCompatActivity implements MediaBrowserProvi
 		mediaBrowserCompat.disconnect();
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		if(playingFragment.showList){
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode==KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0){
+			if(playingFragment.showList){
 				playingFragment.showPlayList();
-				return;
+				return false;
+			}
+			AlertDialog isExit = new AlertDialog.Builder(this).create();
+			// 设置对话框标题
+			isExit.setTitle("系统提示");
+			// 设置对话框消息
+			isExit.setMessage("确定要退出吗");
+			// 添加选择按钮并注册监听
+			isExit.setButton("确定", listener);
+			isExit.setButton2("取消", listener);
+			// 显示对话框
+			isExit.show();
 		}
-		AlertDialog isExit = new AlertDialog.Builder(this).create();
-		// 设置对话框标题
-		isExit.setTitle("系统提示");
-		// 设置对话框消息
-		isExit.setMessage("确定要退出吗");
-		// 添加选择按钮并注册监听
-		isExit.setButton("确定", listener);
-		isExit.setButton2("取消", listener);
-		// 显示对话框
-		isExit.show();
+		return false;
 	}
+
 
 
 	private final MediaBrowserCompat.ConnectionCallback mConnectionCallback =
