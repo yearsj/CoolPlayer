@@ -17,5 +17,6 @@
     <color name="theme">#9ACD32</color>
     <color name="trans">#aa434343</color>
     <color name="totalTrans">#00000000</color>
+    <color name="transparent">#00000000</color>
 
 </resources>

@@ -24,6 +24,7 @@ import yearsj.com.coolplayer.View.adapter.MusicItemAdapter;
 import yearsj.com.coolplayer.View.model.MediaBrowserProvider;
 import yearsj.com.coolplayer.View.model.MusicItem;
 import yearsj.com.coolplayer.View.ui.R;
+import yearsj.com.coolplayer.View.ui.view.WaitDialog;
 import yearsj.com.coolplayer.View.util.LogHelper;
 
 public class BrowerFragment extends BaseFragment {
@@ -245,7 +246,7 @@ public class BrowerFragment extends BaseFragment {
             protected void onPreExecute() {
                 super.onPreExecute();
                 //显示加载进度对话框
-                System.out.println("正在加载...");
+                WaitDialog.showDialogForLoading(getActivity(), "正在加载", true);
             }
 
             @Override
@@ -258,6 +259,7 @@ public class BrowerFragment extends BaseFragment {
                     // 加载失败
                     Log.i("DailyFragment", "加载失败");
                 }
+                WaitDialog.hideDialogForLoading();
             }
 
             @Override
