@@ -20,4 +20,16 @@ public class StringHelper {
             title=title.substring(0,length)+"...";
         return title;
     }
+
+    public static String getUpperString(String str){
+        String newString="";
+        for(int i=0;i<str.length();i++){
+            char a=str.charAt(i);
+            if(a>=97&&a<=122){
+                a=(char)(a-32);
+            }
+            newString+=a;
+        }
+        return newString;
+    }
 }
