@@ -37,15 +37,6 @@ public class SortAdapter extends SimpleAdapter implements SectionIndexer {
 	}
 
 
-	/**
-	 * 
-	 * @param list
-	 */
-	public void updateListView(List<SortModel> list) {
-		this.list = list;
-		notifyDataSetChanged();
-	}
-
 	public void clear() {
 		this.data.clear();
 		this.list.clear();
@@ -57,14 +48,6 @@ public class SortAdapter extends SimpleAdapter implements SectionIndexer {
 		this.list.addAll(sourceDataList);
 		notifyDataSetChanged();
 	}
-
-	public void add(Map<String,String> item,List<SortModel> sourceDataList) {
-		this.data.add(item);
-		this.list=sourceDataList;
-		notifyDataSetChanged();
-	}
-
-
 
 	public View getView(final int position, View view, ViewGroup arg2) {
 		ViewHolder viewHolder = null;
