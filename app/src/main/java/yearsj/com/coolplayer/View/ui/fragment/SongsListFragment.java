@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -73,6 +75,9 @@ public class SongsListFragment extends BaseFragment {
     List<Map<String,String>> allData=new ArrayList<>();
     private MediaBrowserProvider mediaBrowserProvider;
     private SearchInfoTextView filterEdit;
+    int editHight;
+    int hight=200;
+    int listHight;
 
     private static final String TAG = LogHelper.makeLogTag(SongsListFragment.class.getSimpleName());
     private static final String ARG_MEDIA_ID = "media_id";
@@ -129,6 +134,7 @@ public class SongsListFragment extends BaseFragment {
                             adapter.add(map, sourceDataList);
                         }
                         adapter.notifyDataSetChanged();
+                        filterEdit.setShakeAnimation();
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
                     }
@@ -184,12 +190,10 @@ public class SongsListFragment extends BaseFragment {
         dialog = (TextView)view.findViewById(R.id.adialog);
         characterParser = CharacterParser.getInstance();
         pinyinComparator = new PinyinComparator();
-
-        mMediaId=getArguments().getString("mediaId");
-
+        editHight=filterEdit.getBottom();
         loadAdapter();
         setOnListListener();
-
+        mMediaId=getArguments().getString("mediaId");
         setSideBarHight(listViewHeight);
         sideBar.setTextView(dialog, listViewHeight);
         sideBar.setOnTouchingLetterChangedListener(new CharacterSideBarView.OnTouchingLetterChangedListener() {
@@ -284,15 +288,17 @@ public class SongsListFragment extends BaseFragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if(firstVisibleItem==0){
+                listHight=list.getTop();
+                if((editHight+hight*firstVisibleItem)<listHight){
+                        filterEdit.setShakeAnimation();
                         filterEdit.setVisibility(View.VISIBLE);
-                    }else{
-                        filterEdit.setVisibility(view.GONE);
+                    }else
+                    {
+                       filterEdit.setVisibility(View.GONE);
                     }
             }
         });
     }
-
 
     /**
      * 列表子项点击事件响应

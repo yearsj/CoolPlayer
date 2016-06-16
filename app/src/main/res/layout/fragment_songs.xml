@@ -30,7 +30,6 @@
             android:layout_marginBottom="10pt"
             android:background="@drawable/edit_input"
             android:drawableLeft="@drawable/search"
-
             android:hint="@string/search_hint"
             android:padding="3dp"
             android:cursorVisible="true"

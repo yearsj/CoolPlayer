@@ -193,11 +193,11 @@ public class MediaNotificationManager extends BroadcastReceiver {
         PendingIntent intent;
         if (mPlaybackState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             label = mService.getString(R.string.label_pause);
-            icon = R.mipmap.play;
+            icon = R.mipmap.pause;
             intent = mPauseIntent;
         } else {
             label = mService.getString(R.string.label_play);
-            icon = R.mipmap.pause;
+            icon = R.mipmap.play;
             intent = mPlayIntent;
         }
         notificationBuilder.addAction(new NotificationCompat.Action(icon, label, intent));
