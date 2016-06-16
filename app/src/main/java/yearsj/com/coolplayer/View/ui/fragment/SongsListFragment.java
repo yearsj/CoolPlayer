@@ -115,18 +115,19 @@ public class SongsListFragment extends BaseFragment {
                         allData.clear();
                         sourceDataList.clear();
                         for (MediaBrowserCompat.MediaItem item : children) {
-                            Map<String,String> map=new HashMap<String, String>();
-                            String title=item.getDescription().getTitle().toString();
-                            String info=item.getDescription().getSubtitle().toString();
+                            Map<String, String> map = new HashMap<String, String>();
+                            String title = item.getDescription().getTitle().toString();
+                            String info = item.getDescription().getSubtitle().toString();
                             map.put(TITLE, title);
                             map.put(INFO, info);
 
                             allData.add(map);
                             titles.add(title);
+
+                            sourceDataList = filledData(titles);
+                            Collections.sort(sourceDataList, pinyinComparator);
+                            adapter.add(map, sourceDataList);
                         }
-                        sourceDataList = filledData(titles);
-                        Collections.sort(sourceDataList, pinyinComparator);
-                        adapter.addAll(allData,sourceDataList);
                         adapter.notifyDataSetChanged();
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
