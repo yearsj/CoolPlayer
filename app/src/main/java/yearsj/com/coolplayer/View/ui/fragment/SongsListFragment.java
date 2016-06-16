@@ -9,6 +9,8 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ import yearsj.com.coolplayer.View.ui.view.WaitDialog;
 import yearsj.com.coolplayer.View.util.CharacterParser;
 import yearsj.com.coolplayer.View.util.LogHelper;
 import yearsj.com.coolplayer.View.util.PinyinComparator;
+import yearsj.com.coolplayer.View.util.StringHelper;
 
 /**
  * Created by bing on 2016/6/2.
@@ -66,6 +69,8 @@ public class SongsListFragment extends BaseFragment {
 
     private List<String>  titles;
     List<MediaBrowserCompat.MediaItem> songs;
+    List<MediaBrowserCompat.MediaItem> newSongs =new ArrayList<>();
+    List<Map<String,String>> allData=new ArrayList<>();
     private MediaBrowserProvider mediaBrowserProvider;
     private SearchInfoTextView filterEdit;
 
@@ -105,6 +110,10 @@ public class SongsListFragment extends BaseFragment {
                         adapter.clear();
                         titles=new ArrayList<String>();
                         songs=children;
+                        newSongs.clear();
+                        newSongs.addAll(children);
+                        allData.clear();
+                        sourceDataList.clear();
                         for (MediaBrowserCompat.MediaItem item : children) {
                             Map<String,String> map=new HashMap<String, String>();
                             String title=item.getDescription().getTitle().toString();
@@ -112,11 +121,12 @@ public class SongsListFragment extends BaseFragment {
                             map.put(TITLE, title);
                             map.put(INFO, info);
 
+                            allData.add(map);
                             titles.add(title);
-                            sourceDataList = filledData(titles);
-                            Collections.sort(sourceDataList, pinyinComparator);
-                            adapter.add(map,sourceDataList);
                         }
+                        sourceDataList = filledData(titles);
+                        Collections.sort(sourceDataList, pinyinComparator);
+                        adapter.addAll(allData,sourceDataList);
                         adapter.notifyDataSetChanged();
                     } catch (Throwable t) {
                         LogHelper.e(TAG, "Error on childrenloaded", t);
@@ -192,7 +202,52 @@ public class SongsListFragment extends BaseFragment {
 
             }
         });
+
+        filterEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.clear();
+                newSongs.clear();
+                String str=filterEdit.getText().toString();
+                if(str=="") {
+                    sideBar.setEnabled(true);
+                    adapter.addAll(allData,sourceDataList);
+                    newSongs.addAll(songs);
+                }
+                else {
+                    List<Map<String, String>> newDataSet = new ArrayList<Map<String, String>>();
+                    List<SortModel> models = new ArrayList<SortModel>();
+                    for (int i=0;i<allData.size();i++) {
+                        Map<String, String> info =allData.get(i);
+                        String title=info.get(TITLE);
+                        title=StringHelper.getUpperString(title);
+                        str=StringHelper.getUpperString(str);
+                        if (title.indexOf(str) != -1) {
+                            newDataSet.add(info);
+                            SortModel sm = new SortModel();
+                            sm.setSortLetters("a");
+                            models.add(sm);
+                            newSongs.add(songs.get(i));
+                        }
+                    }
+                    adapter.addAll(newDataSet, models);
+                    sideBar.setEnabled(false);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
+
 
     public static void setSideBarHight(int hight){
         listViewHeight=hight;
@@ -248,7 +303,7 @@ public class SongsListFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO 自动生成的方法存根
-                MediaBrowserCompat.MediaItem playingMusic = songs.get(position);
+                MediaBrowserCompat.MediaItem playingMusic = newSongs.get(position);
                 mediaBrowserProvider.onMediaItemSelected(playingMusic);
             }
         });

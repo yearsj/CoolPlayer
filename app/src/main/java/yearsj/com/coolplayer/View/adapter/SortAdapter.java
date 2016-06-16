@@ -52,11 +52,18 @@ public class SortAdapter extends SimpleAdapter implements SectionIndexer {
 		notifyDataSetChanged();
 	}
 
+	public void addAll(List<Map<String,String>> data,List<SortModel> sourceDataList){
+		this.data.addAll(data);
+		this.list.addAll(sourceDataList);
+		notifyDataSetChanged();
+	}
+
 	public void add(Map<String,String> item,List<SortModel> sourceDataList) {
 		this.data.add(item);
 		this.list=sourceDataList;
 		notifyDataSetChanged();
 	}
+
 
 
 	public View getView(final int position, View view, ViewGroup arg2) {
