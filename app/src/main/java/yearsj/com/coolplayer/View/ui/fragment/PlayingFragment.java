@@ -47,7 +47,7 @@ public class PlayingFragment extends Fragment{
 
 	QueueFragment playListFragment;
 
-	static boolean  showList=false;
+	public static boolean  showList=false;
 
 	private Drawable poster;
 	/**
@@ -76,14 +76,11 @@ public class PlayingFragment extends Fragment{
 		playListLayout=view.findViewById(R.id.playListLayout);
 		showPlayListLayout=view.findViewById(R.id.fragment_play_list);
 		closeListButton= (Button) view.findViewById(R.id.closeList);
-	//	list = (ListView) view.findViewById(R.id.playLists);
 		mTitle=(TextView)view.findViewById(R.id.musicName);
 		mSubtitle=(TextView)view.findViewById(R.id.musicInfo);
 		mAlbumArt=(ImageView)view.findViewById(R.id.poster);
 		mPlayPause=(ImageView)view.findViewById(R.id.playMusic);
 
-	//	loadData();
-	//	setOnListListener();
 		lines.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -131,7 +128,9 @@ public class PlayingFragment extends Fragment{
 
 
 
-	 void showPlayList(){
+
+
+	public void showPlayList(){
 		Animation anim = null;
 		if(!showList){
 			this.showList=true;
@@ -147,63 +146,6 @@ public class PlayingFragment extends Fragment{
 		}
 	}
 
-
-//	void loadData() {
-//		ArrayList<HashMap<String, Object>> mylist = new ArrayList<HashMap<String, Object>>();
-//		HashMap<String, Object> map;
-//
-//		for (int i = 0; i < 5; i++) {
-//			map = new HashMap<String, Object>();
-//			map.put(STATE, this.getResources().getDrawable(R.drawable.playing));
-//			map.put(TITLE, "陈奕迅");
-//			map.put(INFO, "好久不见·认了吧");
-//			mylist.add(map);
-//		}
-//
-//		SimpleAdapter singerAdapter = new ChangeTextColorAdapter(view.getContext(),
-//				mylist,
-//				R.layout.two_item_with_img_list,
-//
-//
-//				new String[]{STATE , TITLE, INFO},
-//
-//
-//				new int[]{R.id.poster, R.id.titleView, R.id.infoView});
-//
-//		singerAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
-//			@Override
-//			public boolean setViewValue(View view, Object data,
-//										String textRepresentation) {
-//				if (view instanceof ImageView && data instanceof Drawable) {
-//					ImageView iv = (ImageView) view;
-//					iv.setImageDrawable((Drawable) data);
-//					return true;
-//				}
-//				return false;
-//			}
-//		});
-//
-//		list.setAdapter(singerAdapter);
-//	}
-//
-//
-//	/**
-//	 * 列表子项点击事件响应
-//	 */
-//	private void setOnListListener() {
-//		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view,
-//									int position, long id) {
-//				// TODO 自动生成的方法存根
-//
-////                System.out.println(id);
-//			}
-//
-//		});
-//
-//	}
 
 	public void onConnected() {
 		MediaControllerCompat controller = ((FragmentActivity) getActivity())
