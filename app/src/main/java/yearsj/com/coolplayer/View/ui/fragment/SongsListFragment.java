@@ -419,7 +419,7 @@ public class SongsListFragment extends BaseFragment {
             protected void onPreExecute() {
                 super.onPreExecute();
                 //显示加载进度对话框
-                WaitDialog.showDialogForLoading(getActivity(), "正在加载", true);
+                WaitDialog.showDialogForLoading(getActivity(), "正在扫描", true);
                 //System.out.println("正在加载...");
             }
 
