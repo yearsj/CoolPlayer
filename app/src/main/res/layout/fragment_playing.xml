@@ -49,14 +49,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/likeBlack"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/musicInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/deepdarkGrey"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:ellipsize="end" />
     </LinearLayout>
 
     <ImageView
