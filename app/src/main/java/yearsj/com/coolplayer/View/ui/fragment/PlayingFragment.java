@@ -118,8 +118,7 @@ public class PlayingFragment extends Fragment{
 
 
 	void subscribePlayList(){
-		if(playListFragment==null)
-			playListFragment=new QueueFragment();
+		playListFragment=new QueueFragment();
 		FragmentTransaction transaction = ((MainActivity)getActivity()).getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.playListFrame,playListFragment);
 		transaction.addToBackStack(null);
